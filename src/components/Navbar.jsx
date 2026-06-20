@@ -17,9 +17,7 @@ const Navbar = () => {
         {/* Nav Links */}
         <nav className="hidden md:flex">
           <ul className="flex gap-6 text-sm font-medium text-gray-300">
-            <li className="hover:text-purple-500  cursor-pointer transition">
-              Home
-            </li>
+            <li className="text-purple-500  cursor-pointer transition">Home</li>
             <li className="hover:text-purple-500 cursor-pointer transition">
               Movies
             </li>

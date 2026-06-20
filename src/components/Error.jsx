@@ -7,8 +7,11 @@ const Error = ({ errorMessage }) => {
         className="flex flex-col items-center gap-5 p-4 mb-4 text-sm text-fg-warning rounded-base bg-warning-soft"
         role="alert"
       >
-        <div className="text-5xl">⚠️</div>
-        <p className="text-xs text-red-400">{errorMessage}</p>
+        <div className="text-5xl mb-2">⚠️</div>
+        <p className="text-lg text-red-400">{errorMessage}</p>
+        <p className="text-gray-400 text-sm mt-2">
+          Try searching for another movie.
+        </p>
       </div>
     </div>
   );
