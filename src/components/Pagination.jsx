@@ -1,14 +1,14 @@
 import React from "react";
 import { getPageNumbers } from "../utils/getPageNumbers";
 
-const Pagination = ({ page, totalPages, setPage }) => {
+const Pagination = ({ page, totalPages, onPageChange }) => {
   const pages = getPageNumbers(page, totalPages);
 
   return (
     <div className="flex flex-wrap justify-center items-center gap-2 mt-8">
       {/* Prev */}
       <button
-        onClick={() => setPage((p) => p - 1)}
+        onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
         className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-40 hover:bg-gray-600"
       >
@@ -24,7 +24,7 @@ const Pagination = ({ page, totalPages, setPage }) => {
         ) : (
           <button
             key={index}
-            onClick={() => setPage(p)}
+            onClick={() => onPageChange(p)}
             className={`cursor-pointer px-3 py-1 rounded ${
               p === page
                 ? "bg-purple-600 text-white"
@@ -38,7 +38,7 @@ const Pagination = ({ page, totalPages, setPage }) => {
 
       {/* Next */}
       <button
-        onClick={() => setPage((p) => p + 1)}
+        onClick={() => onPageChange((p) => p + 1)}
         disabled={page === totalPages}
         className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-40 hover:bg-gray-600 cursor-pointer"
       >

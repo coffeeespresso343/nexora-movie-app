@@ -1,11 +1,20 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
+  const location = useLocation();
+
+  const handleHomeClick = () => {
+    <Link to="/"></Link>;
+  };
+
   return (
     <header className="fixed top-0 left-0 mt-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer">
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => scrollTo(0, 0)}
+        >
           <span className="text-2xl font-bold bg-linear-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
             N
           </span>
@@ -14,26 +23,54 @@ const Navbar = () => {
           </h3>
         </div>
 
-        {/* Nav Links */}
         <nav className="hidden md:flex">
           <ul className="flex gap-6 text-sm font-medium text-gray-300">
-            <li className="text-purple-500  cursor-pointer transition">Home</li>
-            <li className="hover:text-purple-500 cursor-pointer transition">
-              Movies
+            <li>
+              <Link
+                to="/"
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                }}
+                className="text-purple-500  cursor-pointer transition"
+              >
+                Home
+              </Link>
             </li>
-            <li className="hover:text-purple-500 cursor-pointer transition">
-              Series
+            <li>
+              <Link
+                to="movies"
+                className="hover:text-purple-500 cursor-pointer transition"
+              >
+                Movies
+              </Link>
             </li>
-            <li className="hover:text-purple-500 cursor-pointer transition">
-              Genres
+            <li>
+              <Link
+                to="/series"
+                className="hover:text-purple-500 cursor-pointer transition"
+              >
+                Series
+              </Link>
             </li>
-            <li className="hover:text-purple-500 cursor-pointer transition">
-              New & Popular
+            <li>
+              <Link
+                to="/genres"
+                className="hover:text-purple-500 cursor-pointer transition"
+              >
+                Genres
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/newAndPopular"
+                className="hover:text-purple-500 cursor-pointer transition"
+              >
+                New & Popular
+              </Link>
             </li>
           </ul>
         </nav>
 
-        {/* Buttons */}
         <div className="flex items-center gap-4">
           <button className="text-white text-lg hover:scale-110 transition">
             <svg
