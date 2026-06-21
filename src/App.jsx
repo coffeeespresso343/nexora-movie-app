@@ -3,10 +3,10 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Series from "./pages/Series";
-import MovieDetails from "./pages/MovieDetails";
 import Footer from "./components/Footer";
 import Genres from "./pages/Genres";
 import NewAndPopular from "./pages/NewAndPopular";
+import MovieDetails from "./pages/MovieDetails";
 
 function App() {
   return (

@@ -3,6 +3,10 @@ import SkeletonGrid from "../components/SkeletonGrid";
 import Error from "../components/Error";
 import MovieCard from "../components/MovieCard";
 import Pagination from "../components/Pagination";
+import Search from "../components/Search";
+import { useDebounce } from "react-use";
+import { getTrendingMovies, updateSearchCount } from "../appwrite";
+import Spinner from "../components/Spinner";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -19,19 +23,28 @@ const Movies = () => {
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
   const [movies, setMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const isUserPaginating = useRef(false);
   const movieRef = useRef();
 
-  const fetchMovies = async () => {
+  useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
+
+  const fetchMovies = async (query = "", pageNum = 1) => {
     setLoading(true);
     setErrorMessage("");
 
     try {
-      const endPoint = `${API_BASE_URL}/discover/movie?page=${page}`;
+      const endPoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${pageNum}`;
 
       const response = await fetch(endPoint, API_OPTIONS);
 
@@ -50,6 +63,10 @@ const Movies = () => {
 
       setMovies(data.results || []);
       setTotalPages(data.total_pages);
+
+      if (query && data.results > 0) {
+        await updateSearchCount(query, data.results[0]);
+      }
     } catch (error) {
       console.error(error);
       setErrorMessage("Failed to fetch movies.");
@@ -63,9 +80,33 @@ const Movies = () => {
     setPage(newPage);
   };
 
+  const loadTrendingMovies = async () => {
+    try {
+      const movies = await getTrendingMovies();
+      setTrendingMovies(movies);
+    } catch (error) {
+      console.log("Error loading trending movies.");
+    }
+  };
+
   useEffect(() => {
-    fetchMovies();
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    setPage(1);
   }, [page]);
+
+  useEffect(() => {
+    loadTrendingMovies();
+  }, []);
+
+  useEffect(() => {
+    fetchMovies(debouncedSearchTerm, page);
+  }, [debouncedSearchTerm, page]);
 
   useEffect(() => {
     movieRef.current?.scrollIntoView({
@@ -77,7 +118,23 @@ const Movies = () => {
   return (
     <>
       <div className="pattern"></div>
-      <div className="wrapper">
+      <div className="wrapper ">
+        {trendingMovies.length > 0 && (
+          <section ref={movieRef} className="trending">
+            <h2>Trending Movies</h2>
+
+            <ul>
+              {trendingMovies.map((m, idx) => (
+                <li key={idx}>
+                  <p>{idx + 1}</p>
+                  <img src={m.poster_url} alt={m.title} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
         <section ref={movieRef} className="all-movies mt-10 scroll-mt-20">
           <div className="flex flex-col items-start mt-0 mb-0">
             <h1 className="text-xl ml-0">Movies</h1>

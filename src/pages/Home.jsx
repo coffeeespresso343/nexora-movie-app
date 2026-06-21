@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useDebounce } from "react-use";
 import Search from "../components/Search";
-import Spinner from "../components/Spinner";
 import MovieCard from "../components/MovieCard";
-import Error from "../components/Error";
+import ErrorMessage from "../components/Error";
 import { getTrendingMovies, updateSearchCount } from "../appwrite";
 import SkeletonGrid from "../components/SkeletonGrid";
 import Pagination from "../components/Pagination";
@@ -20,6 +19,9 @@ const API_OPTIONS = {
     Authorization: `Bearer ${API_KEY}`,
   },
 };
+
+// TMDB caps total_pages at 500 regardless of what it reports
+const MAX_TMDB_PAGES = 500;
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,57 +42,7 @@ const Home = () => {
 
   // Debounce the search term to prevent making too many API requests
   // by waiting for the user to stop typing for 500ms
-  useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
-
-  const fetchMovies = async (query = "", pageNum = 1) => {
-    setLoading(true);
-    setErrorMessage("");
-
-    try {
-      const endPoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${pageNum}`;
-
-      const response = await fetch(endPoint, API_OPTIONS);
-
-      if (!response.ok) {
-        setErrorMessage("Failed to fetch movies.");
-        throw new Error("Error fetching movies.");
-      }
-
-      const data = await response.json();
-
-      if (!data.results || data.results.length === 0) {
-        setMovieList([]);
-        setErrorMessage(`No movies found for "${query}"`);
-
-        return;
-      }
-
-      setMovieList(data.results || []);
-      setTotalPages(data.total_pages);
-
-      if (query && data.results.length > 0) {
-        await updateSearchCount(query, data.results[0]);
-      }
-    } catch (error) {
-      console.log(error);
-      setErrorMessage("Error fetching movies. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadTrendingMovies = async () => {
-    try {
-      const movies = await getTrendingMovies();
-
-      setTrendingMovies(movies);
-    } catch (error) {
-      console.error(`Error fetching trending movies: ${error}`);
-      // setErrorMessage("Error fetching trending movies. Please try again later");
-    }
-  };
+  useDebounce(() => setDebouncedSearchTerm(searchTerm), 800, [searchTerm]);
 
   const handlePageChange = (newPage) => {
     isUserPaginating.current = true;
@@ -110,10 +62,71 @@ const Home = () => {
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
+    let ignore = false;
+
+    const fetchMovies = async (query, pageNum) => {
+      setLoading(true);
+      setErrorMessage("");
+
+      try {
+        const endPoint = query
+          ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`
+          : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${pageNum}`;
+
+        const response = await fetch(endPoint, API_OPTIONS);
+
+        if (!response.ok) {
+          throw new Error("Error fetching movies.");
+        }
+
+        const data = await response.json();
+
+        if (ignore) return;
+
+        if (!data.results || data.results.length === 0) {
+          setMovieList([]);
+          setTotalPages(1);
+          setErrorMessage(`No movies found for "${query}"`);
+          return;
+        }
+
+        setMovieList(data.results);
+        setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
+
+        if (query) {
+          await updateSearchCount(query, data.results[0]);
+        }
+      } catch (error) {
+        console.error(error);
+        if (!ignore) {
+          setErrorMessage("Error fetching movies. Please try again.");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchMovies(debouncedSearchTerm, page);
+
+    return () => {
+      ignore = true;
+    };
   }, [debouncedSearchTerm, page]);
 
   useEffect(() => {
+    const loadTrendingMovies = async () => {
+      try {
+        const movies = await getTrendingMovies();
+        setTrendingMovies(movies);
+      } catch (error) {
+        console.error(`Error fetching trending movies: ${error}`);
+        // Deliberately not surfacing this to the user — a trending-section
+        // failure shouldn't block or alarm them about the main movie list.
+      }
+    };
+
     loadTrendingMovies();
   }, []);
 
@@ -134,63 +147,78 @@ const Home = () => {
   }, [page]);
 
   return (
-    <>
+    <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
       <Hero />
-      <div className="pattern" />
-      <div className="wrapper">
-        {trendingMovies.length > 0 && (
-          <section className="trending">
-            <h2>Trending Movies</h2>
 
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img
-                    src={movie.poster_url}
-                    alt={movie.title}
-                    className="transform transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-100"
-                  />
+      <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
+        {trendingMovies.length > 0 && (
+          <section className="mt-14 trending">
+            <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
+              <h2 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
+                Now Trending
+              </h2>
+              <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+                This week
+              </span>
+            </div>
+
+            <ul className="gap-1">
+              {trendingMovies.map((m, idx) => (
+                <li key={idx} className="ml-0">
+                  <p className="text-transparent">{idx + 1}</p>
+                  <img src={m.poster_url} alt={m.title} />
                 </li>
               ))}
             </ul>
           </section>
         )}
 
-        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <div className="mt-14">
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        </div>
 
-        <section ref={moviesRef} className="all-movies scroll-mt-20">
-          <div className="flex flex-col items-start mt-0 mb-0">
-            <h1 className="text-xl ml-0">All movies</h1>
+        <section ref={moviesRef} className="mt-12 scroll-mt-24">
+          <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
+            <h1 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
+              {debouncedSearchTerm ? "Results" : "All Movies"}
+            </h1>
+            {debouncedSearchTerm && (
+              <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+                "{debouncedSearchTerm}"
+              </span>
+            )}
           </div>
 
-          {isLoading ? (
-            <>
-              {/* <Spinner /> */}
+          <div className="mt-8">
+            {isLoading ? (
               <SkeletonGrid count={8} />
-            </>
-          ) : errorMessage ? (
-            <Error errorMessage={errorMessage} />
-          ) : movieList.length === 0 ? (
-            <p className="text-gray-400 mt-4">No movies available!</p>
-          ) : (
-            <>
-              <ul>
-                {movieList.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} />
-                ))}
-              </ul>
+            ) : errorMessage ? (
+              <ErrorMessage errorMessage={errorMessage} />
+            ) : movieList.length === 0 ? (
+              <p className="mt-4 font-mono text-sm text-[#8B8378]">
+                No movies available.
+              </p>
+            ) : (
+              <>
+                <ul className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                  {movieList.map((movie) => (
+                    <MovieCard key={movie.id} movie={movie} />
+                  ))}
+                </ul>
 
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </>
-          )}
+                <div className="mt-10">
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </section>
       </div>
-    </>
+    </div>
   );
 };
 
