@@ -152,7 +152,9 @@ const MovieDetails = () => {
 
               {trailer && (
                 <button
-                  onClick={() => setShowTrailer(true)}
+                  onClick={() => {
+                    setShowTrailer(true);
+                  }}
                   className="mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
                 >
                   ▶ Play Trailer
@@ -164,20 +166,20 @@ const MovieDetails = () => {
       </div>
       {showTrailer && trailer && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="relative w-[90%] md:w-[800px]">
+          <div className="relative w-[90%] md:w-200">
             <button
               onClick={() => setShowTrailer(false)}
-              className="absolute -top-10 right-0 text-white text-xl"
+              className="absolute -top-10 right-0 text-white text-xl cursor-pointer"
             >
               ✕
             </button>
-
             <iframe
-              className="w-full h-[450px] rounded-lg"
+              className="w-full h-112.5 rounded-lg"
               src={`https://www.youtube.com/embed/${trailer.key}`}
               title="Trailer"
               allowFullScreen
             />
+            )
           </div>
         </div>
       )}
@@ -185,7 +187,7 @@ const MovieDetails = () => {
       <div className="px-6 md:px-12 py-10">
         <h2 className="text-2xl font-bold mb-6">Top Cast</h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 ">
           {cast.map((actor) => (
             <div key={actor.id} className="text-center">
               <img
@@ -195,7 +197,7 @@ const MovieDetails = () => {
                     : "/no-profile.png"
                 }
                 alt={actor.name}
-                className="w-full h-[250px] object-cover rounded-lg"
+                className="w-full h-62.5 object-cover rounded-lg hover:-translate-y-0.5"
               />
 
               <p className="mt-2 font-semibold">{actor.name}</p>

@@ -7,6 +7,7 @@ import { getTrendingMovies, updateSearchCount } from "../appwrite";
 import SkeletonGrid from "../components/SkeletonGrid";
 import Pagination from "../components/Pagination";
 import Hero from "../components/Hero";
+import { Link } from "react-router-dom";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -51,9 +52,9 @@ const Home = () => {
 
   useEffect(() => {
     // Prevent browser from restoring scroll position on reload
-    if ("scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
-    }
+    // if ("scrollRestoration" in window.history) {
+    //   window.history.scrollRestoration = "manual";
+    // }
     window.scrollTo(0, 0);
   }, []);
 
@@ -93,7 +94,7 @@ const Home = () => {
         setMovieList(data.results);
         setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
 
-        if (query) {
+        if (query && data.results.length > 0) {
           await updateSearchCount(query, data.results[0]);
         }
       } catch (error) {
@@ -163,10 +164,21 @@ const Home = () => {
             </div>
 
             <ul className="gap-1">
-              {trendingMovies.map((m, idx) => (
-                <li key={idx} className="ml-0">
-                  <p className="text-transparent">{idx + 1}</p>
-                  <img src={m.poster_url} alt={m.title} />
+              {trendingMovies.map((movie, index) => (
+                <li key={index} className="ml-0 cursor-pointer">
+                  <p className="text-transparent">{index + 1}</p>
+
+                  <Link
+                    to={`/movie/${movie.movie_id}`}
+                    onClick={() => window.scrollTo(0, 0)}
+                    className="group block"
+                  >
+                    <img
+                      className="h-45 w-35 rounded-xl border border-white/10 object-cover transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40"
+                      src={movie.poster_url}
+                      alt={movie.title}
+                    />
+                  </Link>
                 </li>
               ))}
             </ul>

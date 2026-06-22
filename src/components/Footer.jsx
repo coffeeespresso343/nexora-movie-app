@@ -2,9 +2,9 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default m-4">
-      <hr class="my-6 border-gray-800 sm:mx-auto lg:my-8" />
-      <div class="w-full max-w-7-xl mx-auto p-4 md:py-8">
+    <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default">
+      <hr class="border-gray-800 sm:mx-auto lg:my-2" />
+      <div class="w-full max-w-7-xl mx-auto p-6 md:py-8">
         <div class="sm:flex sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 cursor-pointer">
             <span className="text-2xl font-bold bg-linear-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">

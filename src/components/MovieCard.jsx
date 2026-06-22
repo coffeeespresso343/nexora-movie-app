@@ -26,7 +26,7 @@ const MovieCard = ({ movie }) => {
             ))}
           </div>
 
-          <div className="relative aspect-[2/3] w-full overflow-hidden">
+          <div className="relative aspect-2/3 w-full overflow-hidden">
             <img
               src={
                 poster_path
@@ -36,7 +36,7 @@ const MovieCard = ({ movie }) => {
               alt={title}
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#0B0B0F] via-transparent to-transparent opacity-60" />
           </div>
 
           <div className="px-3 py-3">
