@@ -8,6 +8,7 @@ import NewAndPopular from "./pages/NewAndPopular";
 import MovieDetails from "./pages/MovieDetails";
 import Hero from "./components/Hero";
 import Series from "./pages/Series";
+import SeriesDetails from "./pages/SeriesDetails";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/movie" element={<Movie />} />
         <Route path="/series" element={<Series />} />
+        <Route path="/series/:id" element={<SeriesDetails />} />
         <Route path="/genres" element={<Genres />} />
         <Route path="/newAndPopular" element={<NewAndPopular />} />
         <Route path="/movie/:id" element={<MovieDetails />} />

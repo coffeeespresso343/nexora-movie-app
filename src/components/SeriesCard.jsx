@@ -12,7 +12,7 @@ const SeriesCard = ({ series }) => {
   } = series;
 
   return (
-    <li>
+    <li className="list-none">
       <Link
         to={`/series/${id}`}
         onClick={() => window.scrollTo(0, 0)}

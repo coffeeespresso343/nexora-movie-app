@@ -14,85 +14,89 @@ const API_OPTIONS = {
   },
 };
 
-const MovieDetails = () => {
+const SeriesDetails = () => {
   const { id } = useParams();
 
-  const [movie, setMovie] = useState(null);
+  const [series, setSeries] = useState(null);
   const [trailer, setTrailer] = useState(null);
   const [cast, setCast] = useState([]);
   const [showTrailer, setShowTrailer] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isCastLoading, setIsCastLoading] = useState(false);
   const [detailErrorMsg, setDetailErrorMsg] = useState("");
 
   useEffect(() => {
     let ignore = false;
 
-    const fetchMovie = async () => {
+    const fetchSeries = async () => {
       setIsLoading(true);
       setDetailErrorMsg("");
+      setIsCastLoading(true);
 
-      // Reset stale state from any previously viewed movie
-      setMovie(null);
+      // Reset state from any previously viewed series
+      setSeries(null);
       setTrailer(null);
       setCast([]);
       setShowTrailer(false);
 
-      const endPoint = `${API_BASE_URL}/movie/${id}`;
+      const endPoint = `${API_BASE_URL}/tv/${id}`;
 
       try {
-        const [movieResult, videoResult, castResult] = await Promise.all([
+        const [seriesResult, videoResult, castResult] = await Promise.all([
           fetch(`${endPoint}`, API_OPTIONS),
           fetch(`${endPoint}/videos`, API_OPTIONS),
           fetch(`${endPoint}/credits`, API_OPTIONS),
         ]);
 
-        if (!movieResult.ok || !videoResult.ok || !castResult.ok) {
-          throw new Error("Failed to load movie details.");
+        if (!seriesResult.ok || !videoResult.ok || !castResult.ok) {
+          throw new Error("Failed to load series details.");
         }
 
-        const [movieData, videoData, castData] = await Promise.all([
-          movieResult.json(),
+        const [seriesData, videoData, castData] = await Promise.all([
+          seriesResult.json(),
           videoResult.json(),
           castResult.json(),
         ]);
 
         if (ignore) return;
 
-        setMovie(movieData);
+        setSeries(seriesData);
 
         const trailerVideo = videoData.results?.find(
           (vid) => vid.type === "Trailer" && vid.site === "YouTube",
         );
         setTrailer(trailerVideo ?? null);
 
-        setCast(castData.cast?.slice(0, 10) ?? []); // Top 10 cast
+        setCast(castData.cast?.slice(0, 10) ?? []);
       } catch (error) {
         console.error(error);
         if (!ignore) {
-          setDetailErrorMsg(error.message || "Something went wrong.");
+          setDetailErrorMsg(error.message || "Something went wrong");
         }
       } finally {
         if (!ignore) {
           setIsLoading(false);
+          setIsCastLoading(false);
         }
       }
     };
 
-    fetchMovie();
+    fetchSeries();
 
     return () => {
       ignore = true;
     };
   }, [id]);
 
-  if (!movie)
+  if (!series) {
     return (
       <div className="mt-50">
         {isLoading && <Spinner />}
         {detailErrorMsg && <ErrorMessage errorMessage={detailErrorMsg} />}
       </div>
     );
+  }
 
   return (
     <>
@@ -100,20 +104,20 @@ const MovieDetails = () => {
         <div
           className="relative w-full h-screen bg-cover bg-center"
           style={{
-            backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
+            backgroundImage: `url(https://image.tmdb.org/t/p/original/${series.backdrop_path})`,
           }}
         >
-          <div className="absolute inset-0 bg-linear-to-t from-black via-black/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent"></div>
 
           <div className="absolute bottom-30 left-10 right-10 flex flex-col md:flex-row gap-8 items-end">
             <img
-              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-              alt={movie.title}
+              src={`https://image.tmdb.org/t/p/w500/${series.poster_path}`}
+              alt={series.name}
               className="w-48 rounded-lg shadow-lg"
             />
 
             <div className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl font-bold ">{movie.title}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold">{series.name}</h1>
 
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-300">
                 <span className="flex gap-1">
@@ -130,21 +134,31 @@ const MovieDetails = () => {
                   >
                     <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
                   </svg>{" "}
-                  {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+                  {series.vote_average ? series.vote_average.toFixed(1) : "N/A"}
                 </span>
+
                 <span>●</span>
-                <span>{movie.release_date?.split("-")[0] ?? "N/A"}</span>
+
+                <span>{series.first_air_data?.split("-")[0] ?? "N/A"}</span>
+
                 <span>●</span>
-                <span>{movie.original_language?.toUpperCase() ?? "N/A"}</span>
+
+                <span>
+                  {series.number_of_seasons
+                    ? `${series.number_of_seasons} Season${series.number_of_seasons > 1 ? "s" : ""}`
+                    : "N/A"}
+                </span>
+
+                <span>{series.original_language?.toUpperCase() ?? "N/A"}</span>
               </div>
 
               <p className="mt-4 text-gray-300 leading-relaxed">
-                {movie.overview}
+                {series.overview}
               </p>
 
-              <div className="flex flex-wrap gap-2 mt-4">
-                {movie.genres?.map((genre) => (
-                  <span className="mr-2" key={genre.id}>
+              <div>
+                {series.genres?.map((genre) => (
+                  <span key={genre.id} className="mr-2">
                     {genre.name}
                   </span>
                 ))}
@@ -152,9 +166,8 @@ const MovieDetails = () => {
 
               {trailer && (
                 <button
-                  onClick={() => {
-                    setShowTrailer(true);
-                  }}
+                  type="button"
+                  onClick={() => setShowTrailer(true)}
                   className="mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
                 >
                   ▶ Play Trailer
@@ -164,6 +177,8 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Trailer Modal */}
       {showTrailer && trailer && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="relative w-[90%] md:w-200">
@@ -173,41 +188,46 @@ const MovieDetails = () => {
             >
               ✕
             </button>
+
             <iframe
               className="w-full h-112.5 rounded-lg"
               src={`https://www.youtube.com/embed/${trailer.key}`}
               title="Trailer"
               allowFullScreen
             />
-            )
           </div>
         </div>
       )}
 
+      {/* Top 10 casts */}
       <div className="px-6 md:px-12 py-10">
         <h2 className="text-2xl font-bold mb-6">Top Cast</h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 ">
-          {cast.map((actor) => (
-            <div key={actor.id} className="text-center">
-              <img
-                src={
-                  actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w300/${actor.profile_path}`
-                    : "/no-profile.png"
-                }
-                alt={actor.name}
-                className="w-full h-62.5 object-cover rounded-lg hover:-translate-y-0.5"
-              />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          {isCastLoading ? (
+            <Spinner />
+          ) : (
+            cast.map((actor) => (
+              <div key={actor.id} className="text-center">
+                <img
+                  src={
+                    actor.profile_path
+                      ? `https://image.tmdb.org/t/p/w300/${actor.profile_path}`
+                      : "/no-profile.png"
+                  }
+                  alt={actor.name}
+                  className="w-full h-62.5 object-cover rounded-lg"
+                />
 
-              <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
-              <p className="text-sm text-gray-400">({actor.character})</p>
-            </div>
-          ))}
+                <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
+                <p className="text-sm text-gray-400">({actor.character})</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </>
   );
 };
 
-export default MovieDetails;
+export default SeriesDetails;

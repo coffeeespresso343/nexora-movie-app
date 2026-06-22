@@ -4,7 +4,7 @@ const SkeletonCard = () => {
   return (
     <li className="list-none">
       <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
-        <div className="relative aspect-[2/3] w-full animate-pulse bg-white/10">
+        <div className="relative aspect-2/3 w-full animate-pulse bg-white/10">
           {/* Mirrors the rating badge position on SeriesCard */}
           <div className="absolute right-2 top-2 h-5 w-10 animate-pulse rounded-full bg-white/20" />
         </div>
