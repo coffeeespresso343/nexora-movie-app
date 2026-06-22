@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import SkeletonGrid from "../components/SkeletonGrid";
-import Error from "../components/Error";
+import Error from "../components/ErrorMessage";
 import MovieCard from "../components/MovieCard";
 import Pagination from "../components/Pagination";
 import Search from "../components/Search";

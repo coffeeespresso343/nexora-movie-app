@@ -2,12 +2,12 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Movie from "./pages/Movie";
-import Series from "./pages/Series";
 import Footer from "./components/Footer";
 import Genres from "./pages/Genres";
 import NewAndPopular from "./pages/NewAndPopular";
 import MovieDetails from "./pages/MovieDetails";
 import Hero from "./components/Hero";
+import Series from "./pages/Series";
 
 function App() {
   return (

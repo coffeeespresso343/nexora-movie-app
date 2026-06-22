@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDebounce } from "react-use";
 import Search from "../components/Search";
 import MovieCard from "../components/MovieCard";
-import ErrorMessage from "../components/Error";
+import ErrorMessage from "../components/ErrorMessage";
 import { getTrendingMovies, updateSearchCount } from "../appwrite";
 import SkeletonGrid from "../components/SkeletonGrid";
 import Pagination from "../components/Pagination";
@@ -191,9 +191,19 @@ const Home = () => {
 
         <section ref={moviesRef} className="mt-12 scroll-mt-24">
           <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
-            <h1 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
-              {debouncedSearchTerm ? "Results" : "All Movies"}
+            <h1 className="text-2xl font-bold text-white">
+              {debouncedSearchTerm ? (
+                <>
+                  Results for{" "}
+                  <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                    "{debouncedSearchTerm}"
+                  </span>
+                </>
+              ) : (
+                "All Movies"
+              )}
             </h1>
+
             {debouncedSearchTerm && (
               <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
                 "{debouncedSearchTerm}"
