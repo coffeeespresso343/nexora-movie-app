@@ -40,6 +40,10 @@ const Movies = () => {
 
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
+  useEffect(() => {
+    loadTrendingMovies();
+  }, []);
+
   const fetchMovies = async (query = "", pageNum = 1) => {
     setLoading(true);
     setErrorMessage("");
@@ -102,10 +106,6 @@ const Movies = () => {
   useEffect(() => {
     setPage(1);
   }, [debouncedSearchTerm]);
-
-  useEffect(() => {
-    loadTrendingMovies();
-  }, []);
 
   useEffect(() => {
     fetchMovies(debouncedSearchTerm, page);
@@ -182,7 +182,7 @@ const Movies = () => {
                 <ErrorMessage errorMessage={errorMessage} />
               ) : movies.length === 0 ? (
                 <p className="mt-4 font-mono text-sm text-[#8B8378]">
-                  No movies available.
+                  No movies available. Please try again.
                 </p>
               ) : (
                 <>

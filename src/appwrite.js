@@ -9,6 +9,7 @@ const client = new Client()
   .setProject(PROJECT_ID);
 
 const database = new Databases(client);
+
 export const updateSearchCount = async (searchTerm, movie) => {
   // 1. Use Appwrite API to check if the search term exists in the database
 
@@ -42,7 +43,7 @@ export const updateSearchCount = async (searchTerm, movie) => {
 export const getTrendingMovies = async () => {
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.limit(5),
+      Query.limit(8),
       Query.orderDesc("count"),
     ]);
 

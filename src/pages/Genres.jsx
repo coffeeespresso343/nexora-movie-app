@@ -186,8 +186,6 @@ const Genres = () => {
             </span>
           </h1>
 
-          <Search searchTerm={""} setSearchTerm={""} />
-
           <div className="mt-8">
             {genresError ? (
               <ErrorMessage errorMessage={genresError} />
