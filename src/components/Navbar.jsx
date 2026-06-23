@@ -95,7 +95,7 @@ const Navbar = () => {
             aria-label="Toogle menu"
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="text-white md:hidden"
+            className="text-white md:hidden cursor-pointer hover:text-purple-400"
           >
             <svg
               xmlns="https://www.w3.org/2000/svg"

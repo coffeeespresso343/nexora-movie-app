@@ -23,7 +23,6 @@ const ErrorMessage = ({ errorMessage }) => {
       </svg>
 
       <p className="text-sm text-gray-300">{errorMessage}</p>
-      <p className="text-sm text-gray-400">Please try again.</p>
     </div>
   );
 };

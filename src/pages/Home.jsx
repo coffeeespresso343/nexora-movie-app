@@ -155,10 +155,10 @@ const Home = () => {
         {trendingMovies.length > 0 && (
           <section className="mt-14 trending">
             <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
-              <h2 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
+              <h2 className=" text-3xl tracking-wide text-[#F5F1E8]">
                 Now Trending
               </h2>
-              <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+              <span className="text-xs uppercase tracking-widest text-[#8B8378]">
                 This week
               </span>
             </div>

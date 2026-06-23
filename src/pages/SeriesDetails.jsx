@@ -119,12 +119,12 @@ const SeriesDetails = () => {
             <div className="max-w-2xl">
               <h1 className="text-4xl md:text-5xl font-bold">{series.name}</h1>
 
-              <div className="flex items-center gap-4 mt-3 text-sm text-gray-300">
-                <span className="flex gap-1">
+              <div className="flex items-center gap-4 mt-3 text-sm text-gray-300 ">
+                <span className="flex items-center gap-1 bg-white/10 rounded-2xl px-2 py-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
+                    width="15"
+                    height="15"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="gold"
@@ -139,26 +139,35 @@ const SeriesDetails = () => {
 
                 <span>●</span>
 
-                <span>{series.first_air_data?.split("-")[0] ?? "N/A"}</span>
+                <span className="bg-white/10 rounded-2xl px-2 py-1">
+                  {series.first_air_date?.split("-")[0] ?? "N/A"}
+                </span>
 
                 <span>●</span>
 
-                <span>
+                <span className="bg-white/10 rounded-2xl px-2 py-1">
                   {series.number_of_seasons
                     ? `${series.number_of_seasons} Season${series.number_of_seasons > 1 ? "s" : ""}`
                     : "N/A"}
                 </span>
 
-                <span>{series.original_language?.toUpperCase() ?? "N/A"}</span>
+                <span>●</span>
+
+                <span className="bg-white/10 rounded-2xl px-2 py-1">
+                  {series.original_language?.toUpperCase() ?? "N/A"}
+                </span>
               </div>
 
               <p className="mt-4 text-gray-300 leading-relaxed">
                 {series.overview}
               </p>
 
-              <div>
+              <div className="flex flex-wrap gap-2 mt-4 text-sm">
                 {series.genres?.map((genre) => (
-                  <span key={genre.id} className="mr-2">
+                  <span
+                    key={genre.id}
+                    className="text-sm mr-2 border px-2 py-1 rounded-full border-white/10 bg-white/10"
+                  >
                     {genre.name}
                   </span>
                 ))}
@@ -204,26 +213,22 @@ const SeriesDetails = () => {
         <h2 className="text-2xl font-bold mb-6">Top Cast</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-          {isCastLoading ? (
-            <Spinner />
-          ) : (
-            cast.map((actor) => (
-              <div key={actor.id} className="text-center">
-                <img
-                  src={
-                    actor.profile_path
-                      ? `https://image.tmdb.org/t/p/w300/${actor.profile_path}`
-                      : "/no-profile.png"
-                  }
-                  alt={actor.name}
-                  className="w-full h-62.5 object-cover rounded-lg"
-                />
+          {cast.map((actor) => (
+            <div key={actor.id} className="text-center">
+              <img
+                src={
+                  actor.profile_path
+                    ? `https://image.tmdb.org/t/p/w300/${actor.profile_path}`
+                    : "/no-profile.png"
+                }
+                alt={actor.name}
+                className="w-full h-62.5 object-cover rounded-lg"
+              />
 
-                <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
-                <p className="text-sm text-gray-400">({actor.character})</p>
-              </div>
-            ))
-          )}
+              <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
+              <p className="text-sm text-gray-400">({actor.character})</p>
+            </div>
+          ))}
         </div>
       </div>
     </>

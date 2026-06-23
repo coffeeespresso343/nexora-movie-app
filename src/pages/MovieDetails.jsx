@@ -103,24 +103,24 @@ const MovieDetails = () => {
             backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
           }}
         >
-          <div className="absolute inset-0 bg-linear-to-t from-black via-black/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent"></div>
 
           <div className="absolute bottom-30 left-10 right-10 flex flex-col md:flex-row gap-8 items-end">
             <img
               src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-              alt={movie.title}
+              alt={movie.name}
               className="w-48 rounded-lg shadow-lg"
             />
 
             <div className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl font-bold ">{movie.title}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold">{movie.name}</h1>
 
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-300">
-                <span className="flex gap-1">
+                <span className="flex items-center gap-1 bg-white/10 rounded-2xl px-2 py-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
+                    width="15"
+                    height="15"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="gold"
@@ -132,19 +132,30 @@ const MovieDetails = () => {
                   </svg>{" "}
                   {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
                 </span>
+
                 <span>●</span>
-                <span>{movie.release_date?.split("-")[0] ?? "N/A"}</span>
+
+                <span className="bg-white/10 rounded-2xl px-2 py-1">
+                  {movie.release_date?.split("-")[0] ?? "N/A"}
+                </span>
+
                 <span>●</span>
-                <span>{movie.original_language?.toUpperCase() ?? "N/A"}</span>
+
+                <span className="bg-white/10 rounded-2xl px-2 py-1">
+                  {movie.original_language?.toUpperCase() ?? "N/A"}
+                </span>
               </div>
 
               <p className="mt-4 text-gray-300 leading-relaxed">
                 {movie.overview}
               </p>
 
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-4 text-sm">
                 {movie.genres?.map((genre) => (
-                  <span className="mr-2" key={genre.id}>
+                  <span
+                    key={genre.id}
+                    className="text-sm mr-2 border px-2 py-1 rounded-full border-white/10 bg-white/10"
+                  >
                     {genre.name}
                   </span>
                 ))}
@@ -152,9 +163,8 @@ const MovieDetails = () => {
 
               {trailer && (
                 <button
-                  onClick={() => {
-                    setShowTrailer(true);
-                  }}
+                  type="button"
+                  onClick={() => setShowTrailer(true)}
                   className="mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
                 >
                   ▶ Play Trailer
@@ -164,6 +174,8 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Trailer Modal */}
       {showTrailer && trailer && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="relative w-[90%] md:w-200">
@@ -173,21 +185,22 @@ const MovieDetails = () => {
             >
               ✕
             </button>
+
             <iframe
               className="w-full h-112.5 rounded-lg"
               src={`https://www.youtube.com/embed/${trailer.key}`}
               title="Trailer"
               allowFullScreen
             />
-            )
           </div>
         </div>
       )}
 
+      {/* Top 10 casts */}
       <div className="px-6 md:px-12 py-10">
         <h2 className="text-2xl font-bold mb-6">Top Cast</h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
           {cast.map((actor) => (
             <div key={actor.id} className="text-center">
               <img
@@ -197,7 +210,7 @@ const MovieDetails = () => {
                     : "/no-profile.png"
                 }
                 alt={actor.name}
-                className="w-full h-62.5 object-cover rounded-lg hover:-translate-y-0.5"
+                className="w-full h-62.5 object-cover rounded-lg"
               />
 
               <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
