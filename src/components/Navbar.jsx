@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },
@@ -11,11 +12,21 @@ const NAV_LINKS = [
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
     setIsMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setIsUserMenuOpen(false);
+    navigate("/");
   };
 
   return (
@@ -76,19 +87,65 @@ const Navbar = () => {
             </svg>
           </button>
 
-          <button
-            type="button"
-            className="hidden rounded-full border border-white/20 px-4 py-2 text-sm text-white transition hover:bg-white/10 sm:block"
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            className="
-          rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-4 py-2 font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:brightness-110"
-          >
-            Get Started
-          </button>
+          {isAuthenticated ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsUserMenuOpen((open) => !open)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-sm font-bold text-white"
+              >
+                {user?.name?.charAt(0)?.toUpperCase() ||
+                  user?.email?.charAt(0)?.toUpperCase() ||
+                  "?"}
+              </button>
+
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-44 rounded-lg border border-white/10 bg-black/90 py-1 shadow-lg backdrop-blur-md">
+                  <div className="truncate border-b border-white/10 px-4 py-2 text-xs text-gray-400">
+                    {user?.email}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex items-center justify-baseline gap-2 w-full px-4 py-2 text-left text-sm text-red-500 transition hover:bg-white/5 hover:text-red-600"
+                  >
+                    Log Out
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m16 17 5-5-5-5" />
+                      <path d="M21 12H9" />
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/signin"
+                className="hidden rounded-full border border-white/20 px-4 py-2 text-sm text-white transition hover:bg-white/10 sm:block"
+              >
+                Sign In
+              </Link>
+
+              <Link
+                to="/signup"
+                className="rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-4 py-2 font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:brightness-110"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
 
           <button
             type="button"

@@ -95,7 +95,7 @@ const Series = () => {
     };
   }, [debouncedSearchTerm, page]);
 
-  (useEffect(() => {
+  useEffect(() => {
     if (isFirstLoad.current) {
       isFirstLoad.current = false;
       return;
@@ -109,36 +109,62 @@ const Series = () => {
     });
 
     isUserPaginating.current = false;
-  }),
-    [page]);
+  }, [page]);
 
   return (
-    <div className="min-h-screen bg-black pt-28 text-white">
-      <div className="mx-auto max-w-7xl px-6 pb-20">
-        <h1 className="text-3xl font-bold text-white">
-          Browse{" "}
-          <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-            Series
-          </span>
-        </h1>
+    <div className="min-h-screen bg-black  text-white">
+      <section className="relative flex h-[70vh] min-h-70 w-full items-center overflow-hidden pt-1.5">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 20% 20%, rgba(168,85,247,0.35), transparent 75%), radial-gradient(circle at 80% 70%, rgba(236,72,153,0.3), transparent 75%), #000",
+          }}
+        />
+        <svg
+          className="absolute inset-x-0 bottom-0 h-10 w-full opacity-20"
+          viewBox="0 0 800 40"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 40 }).map((_, i) => (
+            <rect
+              key={i}
+              x={i * 20 + 6}
+              y="14"
+              width="8"
+              height="12"
+              rx="2"
+              fill="white"
+            />
+          ))}
+        </svg>
 
-        <div className="mt-8">
+        <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-black/40"></div>
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
+          <h1 className="text-4xl font-bold md:text-5xl">
+            Browse by{" "}
+            <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+              Series
+            </span>
+          </h1>
+
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
+      </section>
 
+      <div className="mx-auto max-w-7xl px-6 pb-20">
         <section ref={seriesRef} className="mt-10 scroll-mt-24">
-          <h2 className="text-2xl font-bold text-white">
-            {debouncedSearchTerm ? (
-              <>
-                Results for{" "}
-                <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-                  "{debouncedSearchTerm}"
-                </span>
-              </>
-            ) : (
-              "All Series"
+          <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
+            <h1 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
+              {debouncedSearchTerm ? "Results" : "All Series"}
+            </h1>
+            {debouncedSearchTerm && (
+              <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+                "{debouncedSearchTerm}"
+              </span>
             )}
-          </h2>
+          </div>
 
           <div className="mt-8">
             {isLoading ? (

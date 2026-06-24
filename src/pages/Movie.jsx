@@ -159,11 +159,11 @@ const Movies = () => {
             </section>
           )}
 
-          <div className="mt-14">
+          <div className="mt-5">
             <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
 
-          <section ref={movieRef} className="mt-12 scroll-mt-24">
+          <section ref={movieRef} className="mt-5 scroll-mt-24">
             <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
               <h1 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
                 {debouncedSearchTerm ? "Results" : "All Movies"}

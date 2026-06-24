@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Query } from "appwrite";
+import { Account, Client, Databases, ID, OAuthProvider, Query } from "appwrite";
 
 const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
@@ -9,6 +9,9 @@ const client = new Client()
   .setProject(PROJECT_ID);
 
 const database = new Databases(client);
+
+export const account = new Account(client);
+export { OAuthProvider };
 
 export const updateSearchCount = async (searchTerm, movie) => {
   // 1. Use Appwrite API to check if the search term exists in the database

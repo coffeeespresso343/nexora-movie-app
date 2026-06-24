@@ -148,7 +148,7 @@ const Genres = () => {
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-black pt-28 text-white">
+    <div className="min-h-screen bg-black mt-12 text-white">
       <section className="relative flex h-[70vh] min-h-70 w-full items-center overflow-hidden pt-1.5">
         <div
           className="absolute inset-0"

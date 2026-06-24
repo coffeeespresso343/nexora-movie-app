@@ -119,7 +119,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
-      <Hero />
+      {/* <Hero /> */}
 
       <div className="mx-auto max-w-7xl px-6 pb-20">
         {(isTrendingLoading || trendingMovies.length > 0) && (
@@ -184,15 +184,13 @@ const Home = () => {
         )}
 
         {ROWS.map(({ title, endpoint, seeAllPath }) => (
-          <>
-            <MovieRow
-              key={endpoint}
-              title={title}
-              movies={rowData[endpoint].movies}
-              isLoading={rowData[endpoint].isLoadig}
-              seeAllPath={seeAllPath}
-            />
-          </>
+          <MovieRow
+            key={endpoint}
+            title={title}
+            movies={rowData[endpoint].movies}
+            isLoading={rowData[endpoint].isLoadig}
+            seeAllPath={seeAllPath}
+          />
         ))}
       </div>
     </div>
