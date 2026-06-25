@@ -7,6 +7,7 @@ import {
 } from "react";
 import { account } from "../appwrite";
 import { ID, OAuthProvider } from "appwrite";
+import Spinner from "../components/Spinner";
 
 const AuthContext = createContext(null);
 
@@ -100,11 +101,18 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = useCallback(() => {
     const baseUrl = window.location.origin;
+
     account.createOAuth2Token({
       provider: OAuthProvider.Google,
       success: `${baseUrl}/auth/callback`,
       failure: `${baseUrl}/signin`,
     });
+
+    // account.createOAuth2Session({
+    //   provider: OAuthProvider.Google,
+    //   success: `${baseUrl}/auth/callback`,
+    //   failure: `${baseUrl}/signin`,
+    // });
   }, []);
 
   const completeOAuthSession = useCallback(async (userId, secret) => {

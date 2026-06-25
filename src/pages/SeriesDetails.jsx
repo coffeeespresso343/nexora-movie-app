@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import ErrorMessage from "../components/ErrorMessage";
 
@@ -25,6 +25,8 @@ const SeriesDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCastLoading, setIsCastLoading] = useState(false);
   const [detailErrorMsg, setDetailErrorMsg] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let ignore = false;
@@ -107,6 +109,24 @@ const SeriesDetails = () => {
             backgroundImage: `url(https://image.tmdb.org/t/p/original/${series.backdrop_path})`,
           }}
         >
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-6 left-6 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
           <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent"></div>
 
           <div className="absolute bottom-30 left-10 right-10 flex flex-col md:flex-row gap-8 items-end">
@@ -226,7 +246,7 @@ const SeriesDetails = () => {
               />
 
               <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
-              <p className="text-sm text-gray-400">({actor.character})</p>
+              <p className="text-sm text-gray-400">{actor.character}</p>
             </div>
           ))}
         </div>

@@ -5,6 +5,7 @@ import Search from "../components/Search";
 import SkeletonGrid from "../components/SkeletonGrid";
 import ErrorMessage from "../components/ErrorMessage";
 import Pagination from "../components/Pagination";
+import { useLocation } from "react-router-dom";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -32,7 +33,11 @@ const Series = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
+  const location = useLocation();
+
   const seriesRef = useRef(null);
+  const searchRef = useRef(null);
+  const resultRef = useRef(null);
   const isFirstLoad = useRef(true);
   const isUserPaginating = useRef(false);
 
@@ -44,8 +49,34 @@ const Series = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (!debouncedSearchTerm.trim()) return;
+
     setPage(1);
+
+    resultRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    window.history.replaceState({}, document.title);
   }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (location.state?.focusSearch) {
+      searchRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      setTimeout(() => {
+        searchRef.current?.focus();
+        window.history.replaceState({}, document.title);
+      }, 500);
+    }
+  }, [location]);
 
   useEffect(() => {
     let ignore = false;
@@ -113,7 +144,7 @@ const Series = () => {
 
   return (
     <div className="min-h-screen bg-black  text-white">
-      <section className="relative flex h-[70vh] min-h-70 w-full items-center overflow-hidden pt-1.5">
+      <section className="relative flex h-[60vh] min-h-70 w-full items-center overflow-hidden ">
         <div
           className="absolute inset-0"
           style={{
@@ -149,26 +180,33 @@ const Series = () => {
             </span>
           </h1>
 
-          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <Search
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            searchRef={searchRef}
+          />
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-6 pb-20">
+      <div className="mx-auto max-w-7xl px-6 pb-10">
         <section ref={seriesRef} className="mt-10 scroll-mt-24">
-          <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
-            <h1 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
+          <div
+            ref={resultRef}
+            className="flex flex-col border-b border-[#8B8378]/20 pb-2"
+          >
+            <h1 className="md:-mb-4 font-[Bebas_Neue] text-3xl  tracking-wide text-[#F5F1E8]">
               {debouncedSearchTerm ? "Results" : "All Series"}
             </h1>
             {debouncedSearchTerm && (
-              <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+              <span className="text-center font-mono text-xs uppercase tracking-widest text-[#8B8378]">
                 "{debouncedSearchTerm}"
               </span>
             )}
           </div>
 
-          <div className="mt-8">
+          <div className="mt-5">
             {isLoading ? (
-              <SkeletonGrid count={8} />
+              <SkeletonGrid count={10} />
             ) : errorMessage ? (
               <ErrorMessage errorMessage={errorMessage} />
             ) : seriesList.length === 0 ? (

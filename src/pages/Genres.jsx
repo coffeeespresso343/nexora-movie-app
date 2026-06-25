@@ -52,6 +52,10 @@ const Genres = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     let ignore = false;
 
     const fetchGenres = async () => {
@@ -149,7 +153,7 @@ const Genres = () => {
 
   return (
     <div className="min-h-screen bg-black mt-12 text-white">
-      <section className="relative flex h-[70vh] min-h-70 w-full items-center overflow-hidden pt-1.5">
+      <section className="relative flex h-[60vh] min-h-70 w-full items-center overflow-hidden pt-1.5">
         <div
           className="absolute inset-0"
           style={{
@@ -221,8 +225,8 @@ const Genres = () => {
           {selectedGenre ? (
             <>
               <h2 className="text-2xl font-bold text-white">
-                <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-                  {selectedGenre.name}
+                <span className="font-[Bebas_Neue] tracking-wider bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                  {selectedGenre.name}{" "}
                 </span>
                 Movies
               </h2>
@@ -254,7 +258,7 @@ const Genres = () => {
               </div>
             </>
           ) : (
-            <p className="mt-4 text-gray-400">
+            <p className="mt-4 text-gray-400 text-center">
               Pick a genre above to see what's available
             </p>
           )}

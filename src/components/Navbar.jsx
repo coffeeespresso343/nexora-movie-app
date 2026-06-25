@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Spinner from "./Spinner";
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },
@@ -16,6 +17,7 @@ const Navbar = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
   const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogoClick = () => {
@@ -27,6 +29,20 @@ const Navbar = () => {
     await logout();
     setIsUserMenuOpen(false);
     navigate("/");
+  };
+
+  const handleSearch = () => {
+    setIsUserMenuOpen(false);
+    if (!isAuthenticated) navigate("/signin");
+
+    const path = location.pathname;
+    let targetPage = path.startsWith("/series") ? "/series" : "/movie";
+
+    navigate(targetPage, {
+      state: {
+        focusSearch: true,
+      },
+    });
   };
 
   return (
@@ -70,6 +86,7 @@ const Navbar = () => {
             type="button"
             aria-label="Search"
             className="text-white transition hover:scale-110"
+            onClick={handleSearch}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +124,7 @@ const Navbar = () => {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex items-center justify-baseline gap-2 w-full px-4 py-2 text-left text-sm text-red-500 transition hover:bg-white/5 hover:text-red-600"
+                    className="flex items-center justify-baseline gap-2 w-full px-4 py-2 text-left text-sm text-red-400 transition hover:bg-white/5 hover:text-red-500"
                   >
                     Log Out
                     <svg
@@ -185,7 +202,6 @@ const Navbar = () => {
                   <Link
                     to={to}
                     onClick={() => {
-                      window.scrollTo(0, 0);
                       setIsMenuOpen(false);
                     }}
                     className={`block rounded-md px-2 py-2.5 transition ${

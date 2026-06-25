@@ -22,7 +22,7 @@ const MovieCard = ({ movie }) => {
         className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all
                  duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40 group-hover:shadow-lg group-hover:shadow-purple-500/20"
       >
-        <div className="realtive aspect-2/3 w-full overflow-hidden">
+        <div className="relative aspect-2/3 w-full overflow-hidden">
           <img
             src={
               poster_path
@@ -56,7 +56,8 @@ const MovieCard = ({ movie }) => {
           <h3 className="truncate text-sm font-semibold text-white">{title}</h3>
           <div className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
             <span>{original_language?.toUpperCase() ?? "N/A"}</span>
-            <span className="text-gray-600">•</span>
+
+            <span className="text-gray-600">●</span>
             <span>{release_date ? release_date.split("-")[0] : "N/A"}</span>
           </div>
         </div>

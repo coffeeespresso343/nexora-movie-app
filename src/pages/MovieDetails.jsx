@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import ErrorMessage from "../components/ErrorMessage";
 
@@ -25,6 +25,9 @@ const MovieDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [detailErrorMsg, setDetailErrorMsg] = useState("");
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
     let ignore = false;
 
@@ -48,6 +51,7 @@ const MovieDetails = () => {
         ]);
 
         if (!movieResult.ok || !videoResult.ok || !castResult.ok) {
+          setDetailErrorMsg("Sorry, Movie details unavailable.");
           throw new Error("Failed to load movie details.");
         }
 
@@ -96,24 +100,45 @@ const MovieDetails = () => {
 
   return (
     <>
-      <div className="text-white mt-16">
+      <div className="text-white mt-14">
         <div
           className="relative w-full h-screen bg-cover bg-center"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
           }}
         >
-          <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent"></div>
+          <button
+            type="button"
+            onClick={() => {
+              navigate(-1);
+            }}
+            className="absolute top-6 left-6 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent" />
 
           <div className="absolute bottom-30 left-10 right-10 flex flex-col md:flex-row gap-8 items-end">
             <img
               src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-              alt={movie.name}
+              alt={movie.title}
               className="w-48 rounded-lg shadow-lg"
             />
 
             <div className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl font-bold">{movie.name}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold">{movie.title}</h1>
 
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-300">
                 <span className="flex items-center gap-1 bg-white/10 rounded-2xl px-2 py-1">
@@ -214,7 +239,7 @@ const MovieDetails = () => {
               />
 
               <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
-              <p className="text-sm text-gray-400">({actor.character})</p>
+              <p className="text-sm text-gray-400">{actor.character}</p>
             </div>
           ))}
         </div>

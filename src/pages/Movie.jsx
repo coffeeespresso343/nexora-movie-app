@@ -7,7 +7,10 @@ import Search from "../components/Search";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "../appwrite";
 import Spinner from "../components/Spinner";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import SkeletonCard from "../components/SkeletonCard";
+import ErrorMessage from "../components/ErrorMessage";
+import TrendingMovies from "../components/TrendingMovies";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -23,93 +26,112 @@ const API_OPTIONS = {
 const MAX_TMDB_PAGES = 500;
 
 const Movies = () => {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   const [movies, setMovies] = useState([]);
-  const [trendingMovies, setTrendingMovies] = useState([]);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const isUserPaginating = useRef(false);
   const movieRef = useRef(null);
+  const searchRef = useRef(null);
+  const resultRef = useRef(null);
+
+  const location = useLocation();
 
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
-
-  useEffect(() => {
-    loadTrendingMovies();
-  }, []);
-
-  const fetchMovies = async (query = "", pageNum = 1) => {
-    setLoading(true);
-    setErrorMessage("");
-
-    try {
-      const endPoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${pageNum}`;
-
-      const response = await fetch(endPoint, API_OPTIONS);
-
-      if (!response.ok) {
-        setErrorMessage("Failed to fetch movies.");
-        throw new Error("Failed to fetch movies.");
-      }
-
-      const data = await response.json();
-
-      if (!data.results) {
-        setMovies([]);
-        setErrorMessage("No movies found!");
-        throw new Error("No movies found!");
-      }
-
-      setMovies(data.results || []);
-      setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
-
-      if (query && data.results.length > 0) {
-        await updateSearchCount(query, data.results[0]);
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Failed to fetch movies.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handlePageChange = (newPage) => {
     isUserPaginating.current = true;
     setPage(newPage);
   };
 
-  const loadTrendingMovies = async () => {
-    try {
-      const movies = await getTrendingMovies();
-      setTrendingMovies(movies);
-    } catch (error) {
-      console.log("Error loading trending movies.");
-    }
-  };
-
   useEffect(() => {
-    // if ("scrollRestoration" in window.history) {
-    //   window.history.scrollRestoration = "manual";
-    // }
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    setPage(1);
-  }, [debouncedSearchTerm]);
+    let ignore = false;
+
+    setIsLoading(true);
+    setErrorMessage("");
+
+    const fetchMovies = async (query = "", pageNum = 1) => {
+      setIsLoading(true);
+      setErrorMessage("");
+
+      try {
+        const endPoint = query
+          ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`
+          : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${pageNum}`;
+
+        const response = await fetch(endPoint, API_OPTIONS);
+
+        if (!response.ok) {
+          setErrorMessage("Failed to load movies.");
+          throw new Error("Failed to fetch movies.");
+        }
+
+        const data = await response.json();
+
+        if (ignore) return;
+
+        if (!data.results || data.results.length === 0) {
+          setMovies([]);
+          setTotalPages(1);
+          setErrorMessage(`No movies found for "${query}"`);
+          return;
+        }
+
+        setMovies(data.results);
+        setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
+
+        if (query && data.results.length > 0) {
+          await updateSearchCount(query, data.results[0]);
+        }
+      } catch (error) {
+        console.error(error);
+        if (!ignore) {
+          setErrorMessage("Error loading movies.");
+        }
+      } finally {
+        if (!ignore) setIsLoading(false);
+      }
+    };
+
+    fetchMovies(debouncedSearchTerm, page);
+
+    return () => (ignore = true);
+  }, [debouncedSearchTerm, page]);
 
   useEffect(() => {
-    fetchMovies(debouncedSearchTerm, page);
-  }, [debouncedSearchTerm, page]);
+    if (location.state?.focusSearch) {
+      searchRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      setTimeout(() => {
+        searchRef.current?.focus();
+        window.history.replaceState({}, document.title);
+      }, 500);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (!debouncedSearchTerm.trim()) return;
+    setPage(1);
+    resultRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    window.history.replaceState({}, document.title);
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     if (!isUserPaginating.current) return;
@@ -125,65 +147,37 @@ const Movies = () => {
   return (
     <>
       <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
-        <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
-          {trendingMovies.length > 0 && (
-            <section className="mt-20 trending">
-              <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
-                <h2 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
-                  Now Trending
-                </h2>
-                <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
-                  This week
-                </span>
-              </div>
-
-              <ul className="gap-1">
-                {trendingMovies.map((movie, index) => (
-                  <li key={index} className="ml-0 cursor-pointer">
-                    <p className="text-transparent">{index + 1}</p>
-
-                    <Link
-                      to={`/movie/${movie.movie_id}`}
-                      onClick={() => window.scrollTo(0, 0)}
-                      className="group block"
-                    >
-                      <img
-                        className="h-45 w-35 rounded-xl border border-white/10 object-cover transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40"
-                        src={movie.poster_url}
-                        alt={movie.title}
-                      />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+        <div className="mx-auto max-w-7xl px-6 pb-20 sm:px-6 lg:px-8">
+          <TrendingMovies />
 
           <div className="mt-5">
-            <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Search
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              searchRef={searchRef}
+            />
           </div>
 
           <section ref={movieRef} className="mt-5 scroll-mt-24">
-            <div className="flex items-baseline gap-3 border-b border-[#8B8378]/20 pb-3">
-              <h1 className="font-[Bebas_Neue] text-3xl tracking-wide text-[#F5F1E8]">
+            <div
+              ref={resultRef}
+              className="flex flex-col border-b border-[#8B8378]/20 pb-2"
+            >
+              <h1 className="md:-mb-4 font-[Bebas_Neue] text-3xl  tracking-wide text-[#F5F1E8]">
                 {debouncedSearchTerm ? "Results" : "All Movies"}
               </h1>
               {debouncedSearchTerm && (
-                <span className="font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+                <span className="text-center font-mono text-xs uppercase tracking-widest text-[#8B8378]">
                   "{debouncedSearchTerm}"
                 </span>
               )}
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6">
               {isLoading ? (
-                <SkeletonGrid count={8} />
+                <SkeletonGrid count={10} />
               ) : errorMessage ? (
                 <ErrorMessage errorMessage={errorMessage} />
-              ) : movies.length === 0 ? (
-                <p className="mt-4 font-mono text-sm text-[#8B8378]">
-                  No movies available. Please try again.
-                </p>
               ) : (
                 <>
                   <ul className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

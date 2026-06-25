@@ -18,7 +18,9 @@ const MovieRow = ({ title, movies, isLoading, seeAllPath }) => {
   return (
     <section className="mt-14">
       <div className="flex gap-3 items-baseline justify-self-center">
-        <h2 className="text-2xl font-bold text-white">{title}</h2>
+        <h2 className="text-2xl font-[Bebas_Neue] tracking-wider font-bold text-white">
+          {title}
+        </h2>
 
         {seeAllPath && (
           <Link
@@ -53,9 +55,21 @@ const MovieRow = ({ title, movies, isLoading, seeAllPath }) => {
 
         <button
           onClick={scrollRight}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/50 text-black rounded-full p-2 shadow"
+          className="absolute right-0.5 top-1/2 -translate-y-1/2  bg-white/40 hover:bg-white/50 text-black rounded-full p-2 shadow"
         >
-          {">"}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
         </button>
       </div>
     </section>

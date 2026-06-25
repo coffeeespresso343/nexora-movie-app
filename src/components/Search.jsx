@@ -1,7 +1,7 @@
-const Search = ({ searchTerm, setSearchTerm }) => {
+const Search = ({ searchTerm, setSearchTerm, searchRef }) => {
   return (
-    <div className="search">
-      <div>
+    <div className="search ">
+      <div className="">
         <span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -19,6 +19,7 @@ const Search = ({ searchTerm, setSearchTerm }) => {
           </svg>
         </span>
         <input
+          ref={searchRef}
           type="text"
           placeholder="Search through thousand of movies..."
           value={searchTerm}

@@ -55,7 +55,8 @@ const SeriesCard = ({ series }) => {
           <h3 className="truncate text-sm font-semibold text-white">{name}</h3>
           <div className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
             <span>{original_language?.toUpperCase() ?? "N/A"}</span>
-            <span className="text-gray-600">•</span>
+
+            <span className="text-gray-600">●</span>
             <span>{first_air_date ? first_air_date.split("-")[0] : "N/A"}</span>
           </div>
         </div>
