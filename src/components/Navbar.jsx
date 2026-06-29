@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Spinner from "./Spinner";
+import ProfileMenu from "./ProfileMenu";
+import { getAvatarUrl } from "../appwrite";
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },
@@ -18,17 +20,14 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
+  const buttonRef = useRef();
+
   const { user, isAuthenticated, logout } = useAuth();
+  const avatar = getAvatarUrl(user?.prefs?.avatarFileId, 160);
 
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
     setIsMenuOpen(false);
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    setIsUserMenuOpen(false);
-    navigate("/");
   };
 
   const handleSearch = () => {
@@ -44,6 +43,20 @@ const Navbar = () => {
       },
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <header className="fixed mt-0 top-0 left-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-md">
@@ -106,44 +119,30 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <div className="relative">
-              <button
-                type="button"
+              <div
+                ref={buttonRef}
                 onClick={() => setIsUserMenuOpen((open) => !open)}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-sm font-bold text-white"
+                className="flex items-center border-b border-white/10 h-8 w-8 rounded-full object-cover "
               >
-                {user?.name?.charAt(0)?.toUpperCase() ||
-                  user?.email?.charAt(0)?.toUpperCase() ||
-                  "?"}
-              </button>
+                <img
+                  // src="avatar.png"
+                  src={
+                    avatar ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      user?.name.charAt(0) || "User",
+                    )}&background=cd22f0&color=fff`
+                  }
+                  alt={user.name}
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+                <span className="absolute top-0.5 right-0 flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full border border-neutral-900 bg-green-500"></span>
+                </span>
+              </div>
 
               {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-44 rounded-lg border border-white/10 bg-black/90 py-1 shadow-lg backdrop-blur-md">
-                  <div className="truncate border-b border-white/10 px-4 py-2 text-xs text-gray-400">
-                    {user?.email}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="flex items-center justify-baseline gap-2 w-full px-4 py-2 text-left text-sm text-red-400 transition hover:bg-white/5 hover:text-red-500"
-                  >
-                    Log Out
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="m16 17 5-5-5-5" />
-                      <path d="M21 12H9" />
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    </svg>
-                  </button>
-                </div>
+                <ProfileMenu onClose={() => setIsUserMenuOpen(false)} />
               )}
             </div>
           ) : (

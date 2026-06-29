@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import ErrorMessage from "../components/ErrorMessage";
@@ -22,11 +22,33 @@ const MovieDetails = () => {
   const [cast, setCast] = useState([]);
   const [showTrailer, setShowTrailer] = useState(false);
 
+  const [isTrailerLoading, setIsTrailerLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [detailErrorMsg, setDetailErrorMsg] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const closeTrailer = () => {
+    setShowTrailer(false);
+    setIsTrailerLoading(false);
+  };
+
+  useEffect(() => {
+    if (!showTrailer) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        closeTrailer();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showTrailer]);
 
   useEffect(() => {
     let ignore = false;
@@ -39,7 +61,7 @@ const MovieDetails = () => {
       setMovie(null);
       setTrailer(null);
       setCast([]);
-      setShowTrailer(false);
+      closeTrailer();
 
       const endPoint = `${API_BASE_URL}/movie/${id}`;
 
@@ -100,9 +122,9 @@ const MovieDetails = () => {
 
   return (
     <>
-      <div className="text-white mt-14">
+      <div className="relative text-white mt-14">
         <div
-          className="relative w-full h-screen bg-cover bg-center"
+          className="relative w-full min-h-screen bg-cover bg-center pt-10 pb-10"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
           }}
@@ -112,7 +134,7 @@ const MovieDetails = () => {
             onClick={() => {
               navigate(-1);
             }}
-            className="absolute top-6 left-6 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition cursor-pointer"
+            className="absolute  top-6 left-6 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -130,15 +152,18 @@ const MovieDetails = () => {
           </button>
           <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent" />
 
-          <div className="absolute bottom-30 left-10 right-10 flex flex-col md:flex-row gap-8 items-end">
+          <div
+            className="relative flex flex-col md:flex-row sm:flex-row gap-8 items-center 
+          md:items-end px-6 md:px-10 pt-5 md:absolute md:bottom-20 md:left-10 md:right-10"
+          >
             <img
               src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
               alt={movie.title}
-              className="w-48 rounded-lg shadow-lg"
+              className="w-40 sm:w-48 md:w-56 rounded-lg shadow-lg"
             />
 
             <div className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl font-bold">{movie.title}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold ">{movie.title}</h1>
 
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-300">
                 <span className="flex items-center gap-1 bg-white/10 rounded-2xl px-2 py-1">
@@ -189,7 +214,9 @@ const MovieDetails = () => {
               {trailer && (
                 <button
                   type="button"
-                  onClick={() => setShowTrailer(true)}
+                  onClick={() => {
+                    (setIsTrailerLoading(true), setShowTrailer(true));
+                  }}
                   className="mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
                 >
                   ▶ Play Trailer
@@ -202,21 +229,35 @@ const MovieDetails = () => {
 
       {/* Trailer Modal */}
       {showTrailer && trailer && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="relative w-[90%] md:w-200">
+        <div
+          onClick={closeTrailer}
+          className="mt-14 fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+        >
+          <div
+            className="relative w-[90%] max-w-4xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
-              onClick={() => setShowTrailer(false)}
+              onClick={closeTrailer}
               className="absolute -top-10 right-0 text-white text-xl cursor-pointer"
             >
               ✕
             </button>
 
-            <iframe
-              className="w-full h-112.5 rounded-lg"
-              src={`https://www.youtube.com/embed/${trailer.key}`}
-              title="Trailer"
-              allowFullScreen
-            />
+            <div className="aspect-video relative">
+              {isTrailerLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black rounded-lg">
+                  <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                </div>
+              )}
+              <iframe
+                className="w-full h-60 md:h-112 rounded-lg"
+                src={`https://www.youtube.com/embed/${trailer.key}`}
+                title="Trailer"
+                allowFullScreen
+                onLoad={() => setIsTrailerLoading(false)}
+              />
+            </div>
           </div>
         </div>
       )}

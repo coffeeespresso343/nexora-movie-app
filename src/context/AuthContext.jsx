@@ -5,8 +5,15 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { account } from "../appwrite";
-import { ID, OAuthProvider } from "appwrite";
+
+import {
+  account,
+  deleteAvatar,
+  getAvatarUrl,
+  OAuthProvider,
+  uploadAvatar,
+} from "../appwrite";
+import { ID } from "appwrite";
 import Spinner from "../components/Spinner";
 
 const AuthContext = createContext(null);
@@ -30,6 +37,9 @@ function authReducer(state, action) {
 
     case "LOGOUT":
       return { ...state, user: null, isLoading: false, error: "" };
+
+    case "REFRESH_USER":
+      return { ...state, user: action.payload, error: "" };
 
     default:
       return state;
@@ -140,6 +150,114 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const updateProfileName = useCallback(async (name) => {
+    try {
+      const updateUser = await account.updateName({ name });
+      dispatch({ type: "REFRESH_USER", payload: updateUser });
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error?.message || "Could not update name.",
+      };
+    }
+  }, []);
+
+  const updateUserEmail = useCallback(async (email, currentPassword) => {
+    try {
+      const updatedUser = await account.updateEmail({
+        email,
+        password: currentPassword,
+      });
+
+      dispatch({ type: "REFRESH_USER", payload: updatedUser });
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error?.message || "Could not update email.",
+      };
+    }
+  }, []);
+
+  const updateUserPassword = useCallback(
+    async (newPassword, currentPassword) => {
+      try {
+        await account.updatePassword({
+          password: newPassword,
+          oldPassword: currentPassword || undefined,
+        });
+
+        return { success: true };
+      } catch (error) {
+        return {
+          success: false,
+          error: error?.message || "Could not update password.",
+        };
+      }
+    },
+    [],
+  );
+
+  const updateAvatar = useCallback(async (file) => {
+    console.log("CALLED updateAvatar() from Auth");
+    try {
+      const currentUser = await account.get();
+
+      const previousFileId = currentUser.prefs?.avatarFileId;
+      console.log("PREV ID: " + previousFileId);
+
+      const newFileId = await uploadAvatar(file, currentUser.$id);
+      console.log("NEW FILE ID: " + newFileId);
+
+      const updateUser = await account.updatePrefs({
+        prefs: { ...currentUser.prefs, avatarFileId: newFileId },
+      });
+
+      if (previousFileId) {
+        deleteAvatar(previousFileId).catch((err) => console.error(err));
+      }
+
+      dispatch({ type: "REFRESH_USER", payload: updateUser });
+
+      return { success: true, avatarUrl: getAvatarUrl(newFileId) };
+    } catch (error) {
+      return {
+        success: false,
+        error: error?.message || "Could not upload avatar.",
+      };
+    }
+  }, []);
+
+  const removeAvatar = useCallback(async () => {
+    console.log("CALLED removeAvatar() from AuthContext");
+    try {
+      const currentUser = await account.get();
+      const fileId = currentUser.prefs?.avatarFileId;
+
+      const updatedUser = await account.updatePrefs({
+        prefs: { ...currentUser.prefs, avatarFileId: null },
+      });
+
+      if (fileId) {
+        deleteAvatar(fileId).catch((err) => console.error(err));
+      }
+
+      dispatch({ type: "REFRESH_USER", payload: updatedUser });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error?.message || "Faild to remove avatar.",
+      };
+    }
+  }, []);
+
+  const deActiveAccount = useCallback(async () => {
+    console.log("DEACTIVE ACCOUNT");
+  }, []);
+
   const value = {
     user: state.user,
     isLoading: state.isLoading,
@@ -150,6 +268,13 @@ export function AuthProvider({ children }) {
     loginWithGoogle,
     completeOAuthSession,
     logout,
+    updateProfileName,
+    updateUserEmail,
+    updateUserPassword,
+    updateAvatar,
+    removeAvatar,
+    deActiveAccount,
+    getAvatarUrl,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -46,7 +46,7 @@ const Home = () => {
 
   useEffect(() => {
     let ignore = false;
-    setShowTrendingMovies(true);
+
     setErrorMessage("");
 
     ROWS.forEach(({ endpoint }) => {
@@ -58,7 +58,7 @@ const Home = () => {
           );
 
           if (!response.ok) {
-            setErrorMessage(`Failed to fetch ${endpoint}`);
+            setErrorMessage(`Failed to load movies.`);
             return;
           }
 
@@ -81,6 +81,7 @@ const Home = () => {
         }
       };
       fetchRow();
+      setShowTrendingMovies(true);
     });
 
     return () => (ignore = true);

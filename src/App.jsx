@@ -13,6 +13,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AuthCallback from "./pages/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 const AppLayout = ({ children }) => {
   return (
@@ -39,6 +41,7 @@ function App() {
   return (
     <main>
       <Routes>
+        {/* Public - no need authentication */}
         <Route
           path="/"
           element={
@@ -47,13 +50,12 @@ function App() {
             </PublicLayout>
           }
         />
-        {/* Public - no need authentication */}
+
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* Protected */}
-
         <Route
           path="/movie"
           element={
@@ -99,6 +101,24 @@ function App() {
           element={
             <AppLayout>
               <MovieDetails />
+            </AppLayout>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <AppLayout>
+              <Profile />
+            </AppLayout>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <AppLayout>
+              <Settings />
             </AppLayout>
           }
         />

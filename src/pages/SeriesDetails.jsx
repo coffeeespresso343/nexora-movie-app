@@ -22,11 +22,31 @@ const SeriesDetails = () => {
   const [cast, setCast] = useState([]);
   const [showTrailer, setShowTrailer] = useState(false);
 
+  const [isTrailerLoading, setIsTrailerLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isCastLoading, setIsCastLoading] = useState(false);
   const [detailErrorMsg, setDetailErrorMsg] = useState("");
 
   const navigate = useNavigate();
+
+  const closeTrailer = () => {
+    setShowTrailer(false);
+    setIsTrailerLoading(false);
+  };
+
+  useEffect(() => {
+    if (!showTrailer) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        closeTrailer();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showTrailer]);
 
   useEffect(() => {
     let ignore = false;
@@ -102,9 +122,9 @@ const SeriesDetails = () => {
 
   return (
     <>
-      <div className="text-white mt-16">
+      <div className="text-white mt-14">
         <div
-          className="relative w-full h-screen bg-cover bg-center"
+          className="relative w-full min-h-screen bg-cover bg-center pt-10 pb-10"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/original/${series.backdrop_path})`,
           }}
@@ -129,11 +149,14 @@ const SeriesDetails = () => {
           </button>
           <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent"></div>
 
-          <div className="absolute bottom-30 left-10 right-10 flex flex-col md:flex-row gap-8 items-end">
+          <div
+            className="relative flex flex-col md:flex-row sm:flex-row gap-8 items-center 
+          md:items-end px-6 md:px-10 pt-5 md:absolute md:bottom-20 md:left-10 md:right-10"
+          >
             <img
               src={`https://image.tmdb.org/t/p/w500/${series.poster_path}`}
               alt={series.name}
-              className="w-48 rounded-lg shadow-lg"
+              className="w-48 md:w-56 sm:w-48 rounded-lg shadow-lg"
             />
 
             <div className="max-w-2xl">
@@ -196,7 +219,9 @@ const SeriesDetails = () => {
               {trailer && (
                 <button
                   type="button"
-                  onClick={() => setShowTrailer(true)}
+                  onClick={() => {
+                    (setIsTrailerLoading(true), setShowTrailer(true));
+                  }}
                   className="mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
                 >
                   ▶ Play Trailer
@@ -209,21 +234,35 @@ const SeriesDetails = () => {
 
       {/* Trailer Modal */}
       {showTrailer && trailer && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="relative w-[90%] md:w-200">
+        <div
+          onClick={closeTrailer}
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-[90%] md:w-200"
+          >
             <button
-              onClick={() => setShowTrailer(false)}
+              onClick={closeTrailer}
               className="absolute -top-10 right-0 text-white text-xl cursor-pointer"
             >
               ✕
             </button>
 
-            <iframe
-              className="w-full h-112.5 rounded-lg"
-              src={`https://www.youtube.com/embed/${trailer.key}`}
-              title="Trailer"
-              allowFullScreen
-            />
+            <div className="aspect-video relative">
+              {isTrailerLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black rounded-lg">
+                  <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                </div>
+              )}
+              <iframe
+                className="w-full h-60 md:h-112.5 rounded-lg"
+                src={`https://www.youtube.com/embed/${trailer.key}`}
+                title="Trailer"
+                allowFullScreen
+                onLoad={() => setIsTrailerLoading(false)}
+              />
+            </div>
           </div>
         </div>
       )}

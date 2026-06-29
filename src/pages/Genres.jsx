@@ -75,7 +75,8 @@ const Genres = () => {
       } catch (error) {
         console.error(error);
         if (!ignore) {
-          setGenresError("Couldn't load genres. Please try again.");
+          setGenresError("Couldn't load genres.");
+          return;
         }
       }
     };
@@ -102,7 +103,7 @@ const Genres = () => {
         const response = await fetch(endPoint, API_OPTIONS);
 
         if (!response.ok) {
-          throw new Error("Error fetching movies.");
+          throw new Error("Error loading movies.");
         }
 
         const data = await response.json();
@@ -118,11 +119,9 @@ const Genres = () => {
 
         setMovieList(data.results);
         setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
-        // setTotalPages(100);
       } catch (error) {
         console.error(error);
-        if (!ignore)
-          setErrorMessage("Error fetching movies. Please try again.");
+        if (!ignore) setErrorMessage("Error fetching movies.");
       } finally {
         if (!ignore) setIsLoading(false);
       }
