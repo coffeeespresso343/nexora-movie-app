@@ -61,7 +61,7 @@ const FEATURES = [
 
 const Hero = () => {
   return (
-    <section className="relative mt-10 h-screen w-full overflow-hidden text-white">
+    <section className="relative mt-0 md:mt-10 h-screen w-full overflow-hidden text-white">
       <img
         src="hero.png"
         alt="Hero"

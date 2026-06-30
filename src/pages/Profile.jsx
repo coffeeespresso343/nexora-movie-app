@@ -193,7 +193,8 @@ const Profile = () => {
                   type="button"
                   onClick={handleDeactive}
                   disabled={isDeactivating}
-                  className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
+                  title="Coming soon"
+                  className=" cursor-not-allowed rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
                 >
                   {isDeactivating ? "Deactivating..." : "Yes, deactivate"}
                 </button>
