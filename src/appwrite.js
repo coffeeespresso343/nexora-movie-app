@@ -1,14 +1,31 @@
-import { Client, Databases, ID, Query } from "appwrite";
+import {
+  Account,
+  Client,
+  Databases,
+  ID,
+  ImageGravity,
+  OAuthProvider,
+  Permission,
+  Query,
+  Role,
+  Storage,
+} from "appwrite";
 
 const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
+const AVATAR_BUCKET_ID = import.meta.env.VITE_APPWRITE_AVATAR_BUCKET_ID;
 
 const client = new Client()
   .setEndpoint("https://cloud.appwrite.io/v1")
   .setProject(PROJECT_ID);
 
 const database = new Databases(client);
+const storage = new Storage(client);
+
+export const account = new Account(client);
+export { OAuthProvider };
+
 export const updateSearchCount = async (searchTerm, movie) => {
   // 1. Use Appwrite API to check if the search term exists in the database
 
@@ -42,7 +59,7 @@ export const updateSearchCount = async (searchTerm, movie) => {
 export const getTrendingMovies = async () => {
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.limit(5),
+      Query.limit(8),
       Query.orderDesc("count"),
     ]);
 
@@ -50,4 +67,44 @@ export const getTrendingMovies = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getAvatarUrl = (fileId, size = 128) => {
+  if (!fileId) return null;
+  console.log("FILE ID: " + fileId);
+
+  // return storage.getFilePreview({
+  //   bucketId: AVATAR_BUCKET_ID,
+  //   fileId,
+  //   width: size,
+  //   height: size,
+  //   gravity: ImageGravity.Center,
+  //   quality: 90,
+  // });
+
+  return storage.getFileView({
+    bucketId: AVATAR_BUCKET_ID,
+    fileId,
+  });
+};
+
+export const uploadAvatar = async (file, userId) => {
+  const fileId = ID.unique();
+
+  await storage.createFile({
+    bucketId: AVATAR_BUCKET_ID,
+    fileId,
+    file,
+    permissions: [
+      Permission.read(Role.user(userId)),
+      Permission.update(Role.user(userId)),
+      Permission.delete(Role.user(userId)),
+    ],
+  });
+
+  return fileId;
+};
+
+export const deleteAvatar = async (fileId) => {
+  await storage.deleteFile({ bucketId: AVATAR_BUCKET_ID, fileId });
 };

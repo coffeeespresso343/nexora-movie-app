@@ -1,35 +1,34 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Spinner from "./Spinner";
 
-const MovieCard = ({ movie }) => {
+const SeriesCard = ({ series }) => {
   const {
     id,
-    title,
+    name,
     vote_average,
     poster_path,
-    release_date,
+    first_air_date,
     original_language,
-  } = movie;
+  } = series;
 
   return (
     <Link
-      to={`/movie/${id}`}
+      to={`/series/${id}`}
       onClick={() => window.scrollTo(0, 0)}
       className="group block"
     >
       <div
         className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all
-                 duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40 group-hover:shadow-lg group-hover:shadow-purple-500/20"
+             duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40 group-hover:shadow-lg group-hover:shadow-purple-500/20"
       >
-        <div className="relative aspect-2/3 w-full overflow-hidden">
+        <div className="realtive aspect-2/3 w-full overflow-hidden">
           <img
             src={
               poster_path
                 ? `https://image.tmdb.org/t/p/w500/${poster_path}`
                 : "/no-movie.png"
             }
-            alt={title}
+            alt={name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute right-2 inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-70"></div>
@@ -52,13 +51,13 @@ const MovieCard = ({ movie }) => {
           </div>
         </div>
 
-        <div className="px-3 py-3 ">
-          <h3 className="truncate text-sm font-semibold text-white">{title}</h3>
+        <div className="px-3 py-3">
+          <h3 className="truncate text-sm font-semibold text-white">{name}</h3>
           <div className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
             <span>{original_language?.toUpperCase() ?? "N/A"}</span>
 
             <span className="text-gray-600">●</span>
-            <span>{release_date ? release_date.split("-")[0] : "N/A"}</span>
+            <span>{first_air_date ? first_air_date.split("-")[0] : "N/A"}</span>
           </div>
         </div>
       </div>
@@ -66,4 +65,4 @@ const MovieCard = ({ movie }) => {
   );
 };
 
-export default MovieCard;
+export default SeriesCard;

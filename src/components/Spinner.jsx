@@ -21,7 +21,7 @@ const Spinner = () => {
           />
         </svg>
         <span className="sr-only" className="text-gradient">
-          Loading movies...
+          Loading ...
         </span>
       </div>
     </div>
