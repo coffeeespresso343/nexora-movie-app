@@ -47,11 +47,17 @@ const SignUp = () => {
         <p className="mt-2 text-center text-sm text-gray-400">
           Create an account to start watching.
         </p>
+        <div className="mt-3 pb-2 border rounded-sm border-red-400">
+          <p className="mt-2 text-xs text-center text-red-400 ">
+            Don't use your real email, cuz I love your personal data protection.
+            You can use [yourname@gmail.com]
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label htmlFor="name" className="text-sm text-gray-300">
-              Name
+              Username
             </label>
             <input
               className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none transition focus:border-purple-500/60"
@@ -112,7 +118,6 @@ const SignUp = () => {
         <button
           type="button"
           title="Coming Soon..."
-          onClick={loginWithGoogle}
           className="cursor-not-allowed mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium text-white transition hover:bg-white/10"
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
