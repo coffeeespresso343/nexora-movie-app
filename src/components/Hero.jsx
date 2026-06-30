@@ -61,16 +61,14 @@ const FEATURES = [
 
 const Hero = () => {
   return (
-    <section className="relative mt-0 md:mt-10 h-screen w-full overflow-hidden text-white">
+    <section className="relative pt-16 h-screen w-full overflow-hidden text-white">
       <img
         src="hero.png"
         alt="Hero"
         className="absolute inset-0 h-full w-full object-cover"
       />
-
       <div className="absolute inset-0 bg-linear-to-r from-black via-black/60 to-transparent"></div>
       <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-black/20"></div>
-
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-6">
         <div className="max-w-2xl space-y-6">
           <h1 className="flex flex-col items-start text-5xl font-bold leading-[1.05] tracking-tight md:text-6xl">
