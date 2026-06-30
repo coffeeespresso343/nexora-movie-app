@@ -14,7 +14,6 @@ import {
   uploadAvatar,
 } from "../appwrite";
 import { ID } from "appwrite";
-import { OAuthProvider } from "appwrite";
 import Spinner from "../components/Spinner";
 
 const AuthContext = createContext(null);
