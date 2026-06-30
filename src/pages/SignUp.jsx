@@ -111,8 +111,9 @@ const SignUp = () => {
 
         <button
           type="button"
+          title="Coming Soon..."
           onClick={loginWithGoogle}
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium text-white transition hover:bg-white/10"
+          className="cursor-not-allowed mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium text-white transition hover:bg-white/10"
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path
