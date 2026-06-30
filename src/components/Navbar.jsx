@@ -119,13 +119,16 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <div className="relative">
-              <div
+              <button
                 ref={buttonRef}
+                type="button"
                 onClick={() => setIsUserMenuOpen((open) => !open)}
-                className="flex items-center border-b border-white/10 h-8 w-8 rounded-full object-cover "
+                aria-haspopup="menu"
+                aria-expanded={isUserMenuOpen}
+                aria-label="Open profile menu"
+                className="flex h-8 w-8 items-center rounded-full border-b border-white/10 object-cover"
               >
                 <img
-                  // src="avatar.png"
                   src={
                     avatar ||
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -139,8 +142,7 @@ const Navbar = () => {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full border border-neutral-900 bg-green-500"></span>
                 </span>
-              </div>
-
+              </button>
               {isUserMenuOpen && (
                 <ProfileMenu onClose={() => setIsUserMenuOpen(false)} />
               )}

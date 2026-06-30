@@ -14,6 +14,7 @@ import {
   uploadAvatar,
 } from "../appwrite";
 import { ID } from "appwrite";
+import { OAuthProvider } from "appwrite";
 import Spinner from "../components/Spinner";
 
 const AuthContext = createContext(null);
@@ -200,15 +201,12 @@ export function AuthProvider({ children }) {
   );
 
   const updateAvatar = useCallback(async (file) => {
-    console.log("CALLED updateAvatar() from Auth");
     try {
       const currentUser = await account.get();
 
       const previousFileId = currentUser.prefs?.avatarFileId;
-      console.log("PREV ID: " + previousFileId);
 
       const newFileId = await uploadAvatar(file, currentUser.$id);
-      console.log("NEW FILE ID: " + newFileId);
 
       const updateUser = await account.updatePrefs({
         prefs: { ...currentUser.prefs, avatarFileId: newFileId },

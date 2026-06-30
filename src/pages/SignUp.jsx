@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,6 +13,9 @@ const SignUp = () => {
 
   const { signup, loginWithGoogle, isLoading } = useAuth();
 
+  const location = useLocation();
+  const redirectTo = location.state?.from?.pathname || "/";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,7 +29,7 @@ const SignUp = () => {
     const result = await signup({ name, email, password });
 
     if (result.success) {
-      navigate("/");
+      navigate(redirectTo);
     } else {
       setFormError(result.error);
     }

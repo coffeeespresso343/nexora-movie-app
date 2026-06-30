@@ -4,9 +4,9 @@ import SkeletonCard from "./SkeletonCard";
 import MovieCard from "./MovieCard";
 
 const MovieRow = ({ title, movies, isLoading, seeAllPath }) => {
-  if (!isLoading && movies.length === 0) return null;
-
   const scrollRef = useRef(null);
+
+  if (!isLoading && movies.length === 0) return null;
 
   const scrollRight = () => {
     scrollRef.current?.scrollBy({

@@ -70,7 +70,6 @@ export const getTrendingMovies = async () => {
 };
 
 export const getAvatarUrl = (fileId, size = 128) => {
-  console.log("CALLED getAvatarUrl() from appwrite.");
   if (!fileId) return null;
   console.log("FILE ID: " + fileId);
 

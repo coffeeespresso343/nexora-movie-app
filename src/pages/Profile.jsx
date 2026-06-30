@@ -63,23 +63,6 @@ const Profile = () => {
     }
   };
 
-  const handleNameSubmit = async (e) => {
-    e.preventDefault();
-
-    setNameMessage("");
-
-    if (!name.trim()) {
-      setNameMessage("Name cannot be empty.");
-      return;
-    }
-
-    setIsSavingName(true);
-    const result = await updateProfileName(name.trim());
-    setIsSavingName(false);
-
-    setNameMessage(result.success ? "Saved." : result.error);
-  };
-
   const handleDeactive = async () => {};
 
   return (

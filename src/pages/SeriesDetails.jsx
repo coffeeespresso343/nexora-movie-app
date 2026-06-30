@@ -71,8 +71,16 @@ const SeriesDetails = () => {
           fetch(`${endPoint}/credits`, API_OPTIONS),
         ]);
 
-        if (!seriesResult.ok || !videoResult.ok || !castResult.ok) {
+        if (!seriesResult.ok) {
           throw new Error("Failed to load series details.");
+        }
+
+        if (!videoResult.ok) {
+          throw new Error("Failed to load trailer video.");
+        }
+
+        if (!castResult.ok) {
+          throw new Error("Failed to load top cast.");
         }
 
         const [seriesData, videoData, castData] = await Promise.all([

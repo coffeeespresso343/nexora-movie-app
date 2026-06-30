@@ -212,7 +212,6 @@ const Settings = () => {
               <input
                 type="password"
                 id="current-password"
-                required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none focus:border-purple-500/60"
