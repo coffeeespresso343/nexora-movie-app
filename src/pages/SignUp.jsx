@@ -85,7 +85,7 @@ const SignUp = () => {
           </div>
           <div>
             <label htmlFor="password" className="text-sm text-gray-300">
-              password
+              Password
             </label>
             <input
               className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none transition focus:border-purple-500/60"
