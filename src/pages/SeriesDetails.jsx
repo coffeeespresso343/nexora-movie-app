@@ -230,9 +230,19 @@ const SeriesDetails = () => {
                   onClick={() => {
                     (setIsTrailerLoading(true), setShowTrailer(true));
                   }}
-                  className="mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
+                  className="flex items-center gap-2 mt-6 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition cursor-pointer"
                 >
-                  ▶ Play Trailer
+                  <svg
+                    xmlns="http://www.w3.org/200/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    stroke="none"
+                  >
+                    <polygon points="6 3 20 12 6 21 6 3" />
+                  </svg>
+                  Play Trailer
                 </button>
               )}
             </div>

@@ -64,7 +64,6 @@ const Profile = ({ onClose }) => {
         <Link
           to="/settings"
           onClick={onClose}
-          title="Coming Soon"
           className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-300 transition hover:bg-white/5 hover:text-white"
         >
           <svg
