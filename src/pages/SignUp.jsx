@@ -83,8 +83,8 @@ const SignUp = () => {
                 <path d="M12 8v4" />
                 <path d="M12 16h.01" />
               </svg>
-              Do not use your real email! <br /> cuz I love your personal data
-              protection. <br /> You can use "yourname@gmail.com"
+              Do not use your real email! <br />
+              cuz I love your personal data protection.
             </p>
           </div>
         </div>
