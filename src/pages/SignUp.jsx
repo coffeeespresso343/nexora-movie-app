@@ -64,9 +64,9 @@ const SignUp = () => {
           Create an account to start watching.
         </p>
         <div
-          className={`transition-all duration-600 ${showNotice ? "mt-4 max-h-20 opacity-100" : "max-h-0 opacity-0"}`}
+          className={`transition-all duration-600 ${showNotice ? "mt-4 max-h-25 opacity-100" : "max-h-0 opacity-0"}`}
         >
-          <div className="rounded-sm border border-amber-400 pb-2">
+          <div className="rounded-sm border border-amber-400 ">
             <p className="mt-2 flex flex-col items-center gap-2  text-center text-xs text-amber-400 pb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@ const SignUp = () => {
                 <path d="M12 8v4" />
                 <path d="M12 16h.01" />
               </svg>
-              Don't use your real email, cuz I love your personal data
+              Do not use your real email! <br /> cuz I love your personal data
               protection. <br /> You can use "yourname@gmail.com"
             </p>
           </div>
