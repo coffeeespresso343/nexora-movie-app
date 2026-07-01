@@ -133,7 +133,7 @@ const SignIn = () => {
           className={`transition-all duration-600 ${showGoogleNotice ? "mt-4 max-h-25 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
         >
           <div className="rounded-sm border border-amber-400 pb-2">
-            <p className="mt-2 flex flex-col items-center gap-px  text-center text-xs text-amber-400 pb-2">
+            <p className="mt-2 flex flex-col items-center gap-px  text-center text-xs text-amber-400 p-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
