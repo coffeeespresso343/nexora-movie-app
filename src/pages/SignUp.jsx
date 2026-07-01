@@ -63,11 +63,12 @@ const SignUp = () => {
         <p className="mt-2 text-center text-sm text-gray-400">
           Create an account to start watching.
         </p>
+
         <div
-          className={`transition-all duration-600 ${showNotice ? "mt-4 max-h-25 opacity-100" : "max-h-0 opacity-0"}`}
+          className={`transition-all duration-600 ${showNotice ? "mt-4 mb-10 md:mb-2 max-h-30 opacity-100" : "max-h-0 opacity-0"}`}
         >
-          <div className="rounded-sm border border-amber-400 ">
-            <p className="mt-2 flex flex-col items-center gap-2  text-center text-xs text-amber-400 pb-2">
+          <div className="rounded-sm border bg-amber-400/5 border-amber-400/10 p-2">
+            <div className="mt-2 flex flex-col items-center gap-2 text-center text-xs text-amber-400 p-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -83,9 +84,12 @@ const SignUp = () => {
                 <path d="M12 8v4" />
                 <path d="M12 16h.01" />
               </svg>
-              Do not use your real email! <br />
-              cuz I love your personal data protection.
-            </p>
+
+              <h2 className="text-sm font-semibold text-amber-400">
+                Don't use real email.
+              </h2>
+              <p>Cuz I love your personal data protection.</p>
+            </div>
           </div>
         </div>
 
@@ -178,10 +182,10 @@ const SignUp = () => {
         </button>
 
         <div
-          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4  max-h-25 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
+          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4 mb-10 md:mb-8 max-h-30 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
         >
-          <div className="rounded-sm border border-amber-400 p-2">
-            <p className="mt-2 flex flex-col items-center gap-2  text-center text-xs text-amber-400 pb-2">
+          <div className="rounded-sm border bg-amber-400/5 border-amber-400/10 p-2">
+            <div className="mt-2 flex flex-col items-center gap-1  text-center text-xs text-amber-400 p-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -197,10 +201,12 @@ const SignUp = () => {
                 <path d="M12 8v4" />
                 <path d="M12 16h.01" />
               </svg>
-              Sorry,
-              <br /> Continue with Google is not avaliable right now.
-              <br />I will add this feature later.
-            </p>
+              <h2 className="text-sm font-semibold text-amber-400">
+                Sorry for the inconvenience
+              </h2>
+              <p>Continue with Google is not available yet.</p>
+              <p>I will add this feature later.</p>
+            </div>
           </div>
         </div>
 
