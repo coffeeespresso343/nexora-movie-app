@@ -67,7 +67,7 @@ const SignUp = () => {
           className={`transition-all duration-600 ${showNotice ? "mt-4 max-h-20 opacity-100" : "max-h-0 opacity-0"}`}
         >
           <div className="rounded-sm border border-amber-400 pb-2">
-            <p className="mt-2 flex flex-col items-center gap-px  text-center text-xs text-amber-400 pb-2">
+            <p className="mt-2 flex flex-col items-center gap-2  text-center text-xs text-amber-400 pb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -84,7 +84,7 @@ const SignUp = () => {
                 <path d="M12 16h.01" />
               </svg>
               Don't use your real email, cuz I love your personal data
-              protection. You can use "yourname@gmail.com"
+              protection. <br /> You can use "yourname@gmail.com"
             </p>
           </div>
         </div>
@@ -178,10 +178,10 @@ const SignUp = () => {
         </button>
 
         <div
-          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4 max-h-20 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
+          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4  max-h-25 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
         >
-          <div className="rounded-sm border border-amber-400 pb-2">
-            <p className="mt-2 flex flex-col items-center gap-px  text-center text-xs text-amber-400 pb-2">
+          <div className="rounded-sm border border-amber-400 p-2">
+            <p className="mt-2 flex flex-col items-center gap-2  text-center text-xs text-amber-400 pb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -197,7 +197,8 @@ const SignUp = () => {
                 <path d="M12 8v4" />
                 <path d="M12 16h.01" />
               </svg>
-              Sorry, Continue with Google is not avaliable right now.
+              Sorry,
+              <br /> Continue with Google is not avaliable right now.
               <br />I will add this feature later.
             </p>
           </div>
