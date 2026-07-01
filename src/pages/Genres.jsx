@@ -239,7 +239,7 @@ const Genres = () => {
                   <p className="mt-4 text-gray-400">No movie available!</p>
                 ) : (
                   <>
-                    <ul className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    <ul className="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                       {movieList.map((movie) => (
                         <MovieCard key={movie.id} movie={movie} />
                       ))}

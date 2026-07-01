@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -12,6 +12,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState("");
+  const [showGoogleNotice, setShowGoogleNotice] = useState(false);
 
   const redirectTo = location.state?.from?.pathname || "/";
   const message = location.state?.message;
@@ -30,6 +31,13 @@ const SignIn = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    const timer = setTimeout(() => {
+      setShowGoogleNotice(timer);
+      return () => clearTimeout(timer);
+    }, 600);
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center px-6 bg-black text-white">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/8 p-8">
@@ -46,17 +54,11 @@ const SignIn = () => {
             Please sign in to continue watching.
           </p>
         )}
-        <div className="mt-3 pb-2 border rounded-sm border-red-400">
-          <p className="mt-2 text-xs text-center text-red-400 ">
-            Don't use your real email, cuz I love your personal data protection.
-            You can use [yourname@gmail.com]
-          </p>
-        </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label htmlFor="email" className="text-sm text-gray-300">
-              Email
+              Email*
             </label>
             <input
               id="email"
@@ -65,12 +67,12 @@ const SignIn = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2 text-white outline-none transition focus:border-purple-500/60"
-              placeholder="you@example.com"
+              placeholder="you@gmail.com"
             />
           </div>
           <div>
             <label htmlFor="password" className="text-sm text-gray-300">
-              Password
+              Password*
             </label>
             <input
               id="password"
@@ -102,8 +104,9 @@ const SignIn = () => {
 
         <button
           type="button"
-          title="Coming Soon..."
-          className="cursor-not-allowed mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium transition hover:bg-white/10 "
+          title="coming soon..."
+          onClick={setShowGoogleNotice}
+          className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium transition hover:bg-white/10 "
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path
@@ -125,6 +128,33 @@ const SignIn = () => {
           </svg>
           Continue with Google
         </button>
+
+        <div
+          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4 max-h-20 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
+        >
+          <div className="rounded-sm border border-amber-400 pb-2">
+            <p className="mt-2 flex flex-col items-center gap-px  text-center text-xs text-amber-400 pb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+                <path d="M12 8v4" />
+                <path d="M12 16h.01" />
+              </svg>
+              Sorry, Continue with Google is not avaliable right now.
+              <br />I will add this feature later.
+            </p>
+          </div>
+        </div>
+
         <p className="mt-6 text-center text-sm text-gray-400">
           Don't have an account?{" "}
           <Link

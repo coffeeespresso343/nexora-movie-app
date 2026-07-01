@@ -144,7 +144,10 @@ const Navbar = () => {
                 </span>
               </button>
               {isUserMenuOpen && (
-                <ProfileMenu onClose={() => setIsUserMenuOpen(false)} />
+                <ProfileMenu
+                  onClose={() => setIsUserMenuOpen(false)}
+                  triggerRef={buttonRef}
+                />
               )}
             </div>
           ) : (
