@@ -56,6 +56,7 @@ export function AuthProvider({ children }) {
     const checkSession = async () => {
       try {
         const currentUser = await account.get();
+        console.log("current user: " + currentUser);
 
         if (!ignore) {
           dispatch({ type: "SUCCESS", payload: currentUser });
@@ -111,6 +112,7 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = useCallback(() => {
     const baseUrl = window.location.origin;
+    console.log("BASE URL: " + baseUrl);
 
     account.createOAuth2Token({
       provider: OAuthProvider.Google,

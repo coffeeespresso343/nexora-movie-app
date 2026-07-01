@@ -56,8 +56,8 @@ const TrendingMovies = ({}) => {
     return () => (ignore = true);
   }, []);
   return (
-    <section className="mt-20">
-      <h2 className="text-3xl font-[Bebas_Neue] tracking-wide font-bold text-white text-center">
+    <section className="mt-10 border-t border-t-gray-800">
+      <h2 className="mt-5 text-3xl font-[Bebas_Neue] tracking-wide font-bold text-white text-center">
         Trending{" "}
         <span
           className="
@@ -70,7 +70,7 @@ const TrendingMovies = ({}) => {
       <div className="relative">
         <ul
           ref={scrollRef}
-          className=" mt-6 flex gap-5 overflow-x-auto pb-4 scrollbar-none"
+          className=" mt-6 flex gap-2 md:gap-4 overflow-x-auto pb-4 scrollbar-none"
         >
           {isTrendingLoading ? (
             Array.from({ length: 8 }).map((_, i) => (

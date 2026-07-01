@@ -36,7 +36,7 @@ const MovieRow = ({ title, movies, isLoading, seeAllPath }) => {
       <div className="relative">
         <ul
           ref={scrollRef}
-          className="mt-6 flex gap-5 overflow-x-auto pb-4 scrollbar-none scroll-smooth"
+          className="mt-6 flex gap-2 md:gap-4 overflow-x-auto pb-4 scrollbar-none scroll-smooth"
         >
           {isLoading
             ? Array.from({ length: 7 }).map((_, i) => (
