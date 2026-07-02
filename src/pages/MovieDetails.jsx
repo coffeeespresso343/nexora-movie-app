@@ -276,7 +276,7 @@ const MovieDetails = () => {
       <div className="px-6 md:px-12 py-10">
         <h2 className="text-2xl font-bold mb-6">Top Cast</h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 md:gap-4">
           {cast.map((actor) => (
             <div key={actor.id} className="text-center">
               <img

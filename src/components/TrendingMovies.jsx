@@ -56,7 +56,7 @@ const TrendingMovies = ({}) => {
     return () => (ignore = true);
   }, []);
   return (
-    <section className="mt-10 border-t border-t-gray-800">
+    <section className="mt-14 border-t border-t-gray-800">
       <h2 className="mt-5 text-3xl font-[Bebas_Neue] tracking-wide font-bold text-white text-center">
         Trending{" "}
         <span

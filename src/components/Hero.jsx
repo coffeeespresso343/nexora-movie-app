@@ -71,10 +71,10 @@ const Hero = () => {
       <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-black/20"></div>
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-6">
         <div className="max-w-2xl space-y-6">
-          <h1 className="flex flex-col items-start text-5xl font-bold leading-[1.05] tracking-tight md:text-6xl">
-            <span>Entertain, Explore</span>
+          <h1 className="flex flex-col items-start text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
+            <span className="mb-2">Entertain, Explore</span>
             <span className="bg-linear-to-r from bg-purple-400 via-pink-500 to-purple-400 bg-clip-text text-transparent">
-              Experience Nexora
+              Experience - Nexora
             </span>
           </h1>
           <p className="max-w-lg text-lg text-gray-300 md:text-xl">
@@ -82,10 +82,10 @@ const Hero = () => {
             want them.
           </p>
 
-          <div className="flex items-center gap-4 pt-4">
+          <div className="flex items-center gap-3 md:gap-6 pt-4">
             <Link
               to="/movie"
-              className="flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold shadow-lg shadow-purple-500/30 transition hover:scale-105"
+              className="text-[12px] md:text-[16px] px-4 py-2 md:px-6 md:py-3 flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500  font-semibold shadow-lg shadow-purple-500/30 transition hover:scale-105"
             >
               <svg
                 xmlns="http://www.w3.org/200/svg"
@@ -97,11 +97,11 @@ const Hero = () => {
               >
                 <polygon points="6 3 20 12 6 21 6 3" />
               </svg>
-              Start Watching
+              <span className="whitespace-nowrap">Start Watching</span>
             </Link>
             <Link
               to="/genres"
-              className="rounded-full border border-white/20 px-6 py-3 text-white transition hover:scale-105 hover:bg-white/10"
+              className="text-[12px] md:text-[16px] px-4 py-2 md:px-6 md:py-3 rounded-full border border-white/20 text-white transition hover:scale-105 hover:bg-white/10"
             >
               Browse genres
             </Link>

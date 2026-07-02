@@ -155,6 +155,7 @@ const Movies = () => {
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               searchRef={searchRef}
+              placeholder="Search through thousands of movies..."
             />
           </div>
 
@@ -163,7 +164,7 @@ const Movies = () => {
               ref={resultRef}
               className="flex flex-col border-b border-[#8B8378]/20 pb-2"
             >
-              <h1 className="md:-mb-4 font-[Bebas_Neue] text-3xl  tracking-wide text-[#F5F1E8]">
+              <h1 className=" font-[Bebas_Neue] text-3xl text-center  tracking-wide text-[#F5F1E8]">
                 {debouncedSearchTerm ? "Results" : "All Movies"}
               </h1>
               {debouncedSearchTerm && (
