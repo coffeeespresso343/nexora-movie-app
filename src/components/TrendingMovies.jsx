@@ -12,8 +12,11 @@ const TrendingMovies = ({}) => {
   const scrollRef = useRef(null);
 
   const scrollRight = () => {
-    scrollRef.current?.scrollBy({
+    if (!scrollRef.current) return;
+
+    scrollRef.current.scrollBy({
       left: 300,
+      top: 0,
       behavior: "smooth",
     });
   };
@@ -59,10 +62,7 @@ const TrendingMovies = ({}) => {
     <section className="mt-14 border-t border-t-gray-800">
       <h2 className="mt-5 text-3xl font-[Bebas_Neue] tracking-wide font-bold text-white text-center">
         Trending{" "}
-        <span
-          className="
-              bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent"
-        >
+        <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
           Now
         </span>
       </h2>
@@ -79,12 +79,12 @@ const TrendingMovies = ({}) => {
               </li>
             ))
           ) : errorMessage ? (
-            <div className="flex-1/8">
-              <ErrorMessage errorMessage={errorMessage} />
+            <div className="flex-1 basis-8/8">
+              <ErrorMessage errorMessage={errorMessage} isSearchError={false} />
             </div>
           ) : (
             trendingMovies.map((movie, index) => (
-              <li key={movie.movie_id} className="relative shrink-0 list-none">
+              <li key={movie.$id} className="relative shrink-0 list-none">
                 <span className="absolute -left-2 -top-2 z-10 flex h-10 w-8 items-center justify-center rounded-br-xl bg-gray-900  text-4xl font-bold text-gray-600 shadow-md shadow-purple-500/30">
                   {index + 1}
                 </span>
@@ -98,6 +98,7 @@ const TrendingMovies = ({}) => {
                     alt={
                       movie.title || movie.searchTerm || "Trending movie poster"
                     }
+                    loading="lazy"
                     className="h-56 w-36 rounded-xl border border-white/10 object-cover transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40"
                   />
                 </Link>

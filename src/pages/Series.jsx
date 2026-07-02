@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SeriesCard from "../components/SeriesCard";
 import { useDebounce } from "react-use";
 import Search from "../components/Search";
@@ -26,6 +26,7 @@ const Series = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSearchError, setIsSearchError] = useState(false);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -41,7 +42,17 @@ const Series = () => {
   const isFirstLoad = useRef(true);
   const isUserPaginating = useRef(false);
 
-  useDebounce(() => setDebouncedSearchTerm(searchTerm), 800, [searchTerm]);
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(searchTerm);
+
+      if (searchTerm.trim()) {
+        setPage(1);
+      }
+    },
+    800,
+    [searchTerm],
+  );
 
   const handlePageChange = (newPage) => {
     isUserPaginating.current = true;
@@ -54,8 +65,6 @@ const Series = () => {
 
   useEffect(() => {
     if (!debouncedSearchTerm.trim()) return;
-
-    setPage(1);
 
     resultRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -84,6 +93,7 @@ const Series = () => {
     const fetchSeries = async (query, pageNum) => {
       setIsLoading(true);
       setErrorMessage("");
+      setIsSearchError(false);
 
       try {
         const endPoint = query
@@ -92,7 +102,7 @@ const Series = () => {
 
         const response = await fetch(endPoint, API_OPTIONS);
 
-        if (!response.ok) throw new Error("Error fetching series.");
+        if (!response.ok) throw new Error("Error loading series.");
 
         const data = await response.json();
 
@@ -101,6 +111,7 @@ const Series = () => {
         if (!data.results || data.results.length === 0) {
           setSeriesList([]);
           setTotalPages(1);
+          setIsSearchError(true);
           setErrorMessage(`No series found for "${query}"`);
           return;
         }
@@ -110,7 +121,8 @@ const Series = () => {
       } catch (error) {
         console.error(error);
         if (!ignore) {
-          setErrorMessage("Error fetching series. Please try again.");
+          setErrorMessage("Error loading series.");
+          setIsSearchError(false);
         }
       } finally {
         if (!ignore) {
@@ -209,9 +221,14 @@ const Series = () => {
             {isLoading ? (
               <SkeletonGrid count={10} />
             ) : errorMessage ? (
-              <ErrorMessage errorMessage={errorMessage} />
+              <ErrorMessage
+                errorMessage={errorMessage}
+                isSearchError={isSearchError}
+              />
             ) : seriesList.length === 0 ? (
-              <p className="mt-4 text-gray-400">No series available</p>
+              <p className="mt-8 text-center text-gray-400">
+                No series available
+              </p>
             ) : (
               <>
                 <ul className="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

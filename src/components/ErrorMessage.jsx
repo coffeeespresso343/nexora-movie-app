@@ -1,6 +1,6 @@
 import React from "react";
 
-const ErrorMessage = ({ errorMessage }) => {
+const ErrorMessage = ({ errorMessage, isSearchError = false }) => {
   if (!errorMessage) return null;
 
   return (
@@ -22,8 +22,12 @@ const ErrorMessage = ({ errorMessage }) => {
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
 
-      <p className="text-sm text-gray-300">{errorMessage}</p>
-      <p className="text-xs text-gray-400">Please try again.</p>
+      <p className="text-sm font-semibold text-gray-300">{errorMessage}</p>
+      <p className="text-xs text-gray-400">
+        {isSearchError
+          ? "Please try again with a different search term."
+          : "Please try again later."}
+      </p>
     </div>
   );
 };

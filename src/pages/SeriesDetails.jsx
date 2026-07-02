@@ -24,7 +24,6 @@ const SeriesDetails = () => {
 
   const [isTrailerLoading, setIsTrailerLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isCastLoading, setIsCastLoading] = useState(false);
   const [detailErrorMsg, setDetailErrorMsg] = useState("");
 
   const navigate = useNavigate();
@@ -54,7 +53,6 @@ const SeriesDetails = () => {
     const fetchSeries = async () => {
       setIsLoading(true);
       setDetailErrorMsg("");
-      setIsCastLoading(true);
 
       // Reset state from any previously viewed series
       setSeries(null);
@@ -107,7 +105,6 @@ const SeriesDetails = () => {
       } finally {
         if (!ignore) {
           setIsLoading(false);
-          setIsCastLoading(false);
         }
       }
     };
@@ -123,7 +120,9 @@ const SeriesDetails = () => {
     return (
       <div className="mt-50">
         {isLoading && <Spinner />}
-        {detailErrorMsg && <ErrorMessage errorMessage={detailErrorMsg} />}
+        {detailErrorMsg && (
+          <ErrorMessage errorMessage={detailErrorMsg} isSearchError={false} />
+        )}
       </div>
     );
   }
@@ -287,25 +286,31 @@ const SeriesDetails = () => {
 
       {/* Top 10 casts */}
       <div className="px-6 md:px-12 py-10">
-        <h2 className="text-2xl font-bold mb-6">Top Cast</h2>
+        <h2 className="text-2xl text-white font-bold mb-6">Top Cast</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 md:gap-4">
-          {cast.map((actor) => (
-            <div key={actor.id} className="text-center">
-              <img
-                src={
-                  actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w300/${actor.profile_path}`
-                    : "/no-profile.png"
-                }
-                alt={actor.name}
-                className="w-full h-62.5 object-cover rounded-lg"
-              />
+          {cast.length === 0 ? (
+            <p className="text-gray-400 text-sm col-span-full text-center">
+              No cast information available.
+            </p>
+          ) : (
+            cast.map((actor) => (
+              <div key={actor.id} className="text-center">
+                <img
+                  src={
+                    actor.profile_path
+                      ? `https://image.tmdb.org/t/p/w300/${actor.profile_path}`
+                      : "/no-profile.png"
+                  }
+                  alt={actor.name}
+                  className="w-full h-62.5 object-cover rounded-lg"
+                />
 
-              <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
-              <p className="text-sm text-gray-400">{actor.character}</p>
-            </div>
-          ))}
+                <p className="mt-2 font-semibold text-gray-400">{actor.name}</p>
+                <p className="text-sm text-gray-400">{actor.character}</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </>

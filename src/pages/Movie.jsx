@@ -1,16 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SkeletonGrid from "../components/SkeletonGrid";
-import Error from "../components/ErrorMessage";
 import MovieCard from "../components/MovieCard";
 import Pagination from "../components/Pagination";
 import Search from "../components/Search";
 import { useDebounce } from "react-use";
-import { getTrendingMovies, updateSearchCount } from "../appwrite";
-import Spinner from "../components/Spinner";
-import { Link, useLocation } from "react-router-dom";
-import SkeletonCard from "../components/SkeletonCard";
+import { updateSearchCount } from "../appwrite";
 import ErrorMessage from "../components/ErrorMessage";
 import TrendingMovies from "../components/TrendingMovies";
+import { useLocation } from "react-router-dom";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -28,6 +25,7 @@ const MAX_TMDB_PAGES = 500;
 const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSearchError, setIsSearchError] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -44,7 +42,17 @@ const Movies = () => {
 
   const location = useLocation();
 
-  useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(searchTerm);
+
+      if (searchTerm.trim()) {
+        setPage(1);
+      }
+    },
+    500,
+    [searchTerm],
+  );
 
   const handlePageChange = (newPage) => {
     isUserPaginating.current = true;
@@ -60,10 +68,12 @@ const Movies = () => {
 
     setIsLoading(true);
     setErrorMessage("");
+    setIsSearchError(false);
 
     const fetchMovies = async (query = "", pageNum = 1) => {
       setIsLoading(true);
       setErrorMessage("");
+      setIsSearchError(false);
 
       try {
         const endPoint = query
@@ -73,6 +83,7 @@ const Movies = () => {
         const response = await fetch(endPoint, API_OPTIONS);
 
         if (!response.ok) {
+          setIsSearchError(false);
           setErrorMessage("Failed to load movies.");
           throw new Error("Failed to fetch movies.");
         }
@@ -84,6 +95,7 @@ const Movies = () => {
         if (!data.results || data.results.length === 0) {
           setMovies([]);
           setTotalPages(1);
+          setIsSearchError(true);
           setErrorMessage(`No movies found for "${query}"`);
           return;
         }
@@ -98,6 +110,7 @@ const Movies = () => {
         console.error(error);
         if (!ignore) {
           setErrorMessage("Error loading movies.");
+          setIsSearchError(false);
         }
       } finally {
         if (!ignore) setIsLoading(false);
@@ -125,7 +138,6 @@ const Movies = () => {
 
   useEffect(() => {
     if (!debouncedSearchTerm.trim()) return;
-    setPage(1);
     resultRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "center",
@@ -174,11 +186,18 @@ const Movies = () => {
               )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-5">
               {isLoading ? (
                 <SkeletonGrid count={10} />
               ) : errorMessage ? (
-                <ErrorMessage errorMessage={errorMessage} />
+                <ErrorMessage
+                  errorMessage={errorMessage}
+                  isSearchError={isSearchError}
+                />
+              ) : movies.length === 0 ? (
+                <p className="mt-8 text-center text-gray-400">
+                  No movies available
+                </p>
               ) : (
                 <>
                   <ul className="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

@@ -48,6 +48,7 @@ export const updateSearchCount = async (searchTerm, movie) => {
         searchTerm,
         count: 1,
         movie_id: movie.id,
+        title: movie.title,
         poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
       });
     }
@@ -71,7 +72,6 @@ export const getTrendingMovies = async () => {
 
 export const getAvatarUrl = (fileId, size = 128) => {
   if (!fileId) return null;
-  console.log("FILE ID: " + fileId);
 
   // return storage.getFilePreview({
   //   bucketId: AVATAR_BUCKET_ID,
