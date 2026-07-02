@@ -3,7 +3,6 @@ import SkeletonGrid from "../components/SkeletonGrid";
 import ErrorMessage from "../components/ErrorMessage";
 import MovieCard from "../components/MovieCard";
 import Pagination from "../components/Pagination";
-import Search from "../components/Search";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -71,7 +70,6 @@ const Genres = () => {
         if (ignore) return;
 
         setGeneres(data.genres || []);
-        // console.log("Genres: " + genres);
       } catch (error) {
         console.error(error);
         if (!ignore) {

@@ -1,8 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import Hero from "../components/Hero";
-import Movies from "./Movie";
-import Series from "./Series";
-import { getTrendingMovies } from "../appwrite";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MovieRow from "../components/MovieRow";
 import TrendingMovies from "../components/TrendingMovies";
@@ -32,11 +28,10 @@ const ROWS = [
 
 const Home = () => {
   const [showTrendingMovies, setShowTrendingMovies] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [rowData, setRowData] = useState(() =>
     Object.fromEntries(
-      ROWS.map((r) => [r.endpoint, { movies: [], isLoadig: true }]),
+      ROWS.map((r) => [r.endpoint, { movies: [], isLoading: true }]),
     ),
   );
 
@@ -48,6 +43,7 @@ const Home = () => {
     let ignore = false;
 
     setErrorMessage("");
+    setShowTrendingMovies(true);
 
     ROWS.forEach(({ endpoint }) => {
       const fetchRow = async () => {
@@ -58,7 +54,13 @@ const Home = () => {
           );
 
           if (!response.ok) {
-            setErrorMessage(`Failed to load movies.`);
+            if (!ignore) {
+              setErrorMessage(`Failed to load movies.`);
+            }
+            setRowData((prev) => ({
+              ...prev,
+              [endpoint]: { movies: [], isLoading: false },
+            }));
             return;
           }
 
@@ -68,20 +70,19 @@ const Home = () => {
 
           setRowData((prev) => ({
             ...prev,
-            [endpoint]: { movies: data.results || [], isLoadig: false },
+            [endpoint]: { movies: data.results || [], isLoading: false },
           }));
         } catch (error) {
           console.error(error);
           if (!ignore) {
             setRowData((prev) => ({
               ...prev,
-              [endpoint]: { movies: [], isLoadig: false },
+              [endpoint]: { movies: [], isLoading: false },
             }));
           }
         }
       };
       fetchRow();
-      setShowTrendingMovies(true);
     });
 
     return () => (ignore = true);
@@ -100,7 +101,7 @@ const Home = () => {
               key={endpoint}
               title={title}
               movies={rowData[endpoint].movies}
-              isLoading={rowData[endpoint].isLoadig}
+              isLoading={rowData[endpoint].isLoading}
               seeAllPath={seeAllPath}
             />
           ))
@@ -121,7 +122,6 @@ const Home = () => {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              class="lucide lucide-move-up-right-icon lucide-move-up-right"
             >
               <path d="M13 5H19V11" />
               <path d="M19 5L5 19" />

@@ -30,6 +30,7 @@ const MovieCard = ({ movie }) => {
                 : "/no-movie.png"
             }
             alt={title}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute right-2 inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-70"></div>
