@@ -54,7 +54,7 @@ const SignUp = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-black px-6 text-white">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/8 p-8">
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl text-center font-bold text-white">
           Get{" "}
           <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent ">
             Started
