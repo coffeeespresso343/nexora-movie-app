@@ -143,8 +143,8 @@ const Series = () => {
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-black  text-white">
-      <section className="relative flex h-[60vh] min-h-70 w-full items-center overflow-hidden ">
+    <div className="mt-16 min-h-screen bg-black  text-white">
+      <section className="relative flex h-[50vh] min-h-60 w-full items-center overflow-hidden ">
         <div
           className="absolute inset-0"
           style={{
@@ -173,7 +173,7 @@ const Series = () => {
 
         <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-black/40"></div>
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
-          <h1 className="text-4xl font-bold md:text-5xl">
+          <h1 className=" text-4xl text-center font-bold md:text-5xl">
             Browse by{" "}
             <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
               Series
@@ -184,6 +184,7 @@ const Series = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             searchRef={searchRef}
+            placeholder="Search through thousands of series..."
           />
         </div>
       </section>
@@ -194,7 +195,7 @@ const Series = () => {
             ref={resultRef}
             className="flex flex-col border-b border-[#8B8378]/20 pb-2"
           >
-            <h1 className="md:-mb-4 font-[Bebas_Neue] text-3xl  tracking-wide text-[#F5F1E8]">
+            <h1 className="font-[Bebas_Neue] text-3xl text-center  tracking-wide text-[#F5F1E8]">
               {debouncedSearchTerm ? "Results" : "All Series"}
             </h1>
             {debouncedSearchTerm && (

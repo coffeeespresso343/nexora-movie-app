@@ -182,7 +182,7 @@ const Genres = () => {
         <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-black/40"></div>
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
-          <h1 className="text-4xl font-bold md:text-5xl">
+          <h1 className="text-4xl text-center font-bold md:text-5xl">
             Browse by{" "}
             <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
               Genre

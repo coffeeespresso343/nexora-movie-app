@@ -1,79 +1,88 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
+
+const NAVIGATION_LINKS = [
+  { label: "About", href: "#about" },
+  { label: "Privacy Policy", href: "#privacy" },
+  { label: "Licensing", href: "#licensing" },
+  { label: "Contact", href: "#contact" },
+];
+
+const SOCIAL_LINKS = [
+  {
+    name: "GitHub",
+    href: "https://github.com/coffeeespresso343",
+    icon: "👨‍💻",
+  },
+];
 
 const Footer = () => {
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+
   return (
-    <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default">
-      <hr className="border-gray-800 sm:mx-auto lg:my-2" />
-      <div className="w-full max-w-7-xl mx-auto p-6 md:py-8">
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 cursor-pointer">
-            <span className="text-2xl font-bold bg-linear-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
-              N
-            </span>
-            <h3 className="text-white text-xl font-semibold tracking-wide">
-              Nexora
-            </h3>
+    <div className="bg-neutral-primary-soft rounded-base shadow-xs border border-t-gray-800 mt-12">
+      <div className="w-full max-w-7xl mx-auto px-6 py-8 md:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div className="flex flex-col items-start md:items-start">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl font-bold bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                N
+              </span>
+              <h3 className="text-white text-xl font-semibold tracking-wide">
+                Nexora
+              </h3>
+            </div>
+            <p className="text-gray-400 text-sm">
+              Your ultimate streaming destination
+            </p>
+            <p className="text-gray-400 text-xs">
+              Made with passion for movie lovers
+            </p>
           </div>
-          <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-body sm:mb-0">
-            <li>
-              <a
-                href="#"
-                className="cursor-not-allowed hover:underline me-4 md:me-6 text-gray-100"
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="cursor-not-allowed hover:underline me-4 md:me-6 text-gray-100"
-              >
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="cursor-not-allowed hover:underline me-4 md:me-6 text-gray-100"
-              >
-                Licensing
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="cursor-not-allowed hover:underline text-gray-100"
-              >
-                Contact
-              </a>
-            </li>
-          </ul>
+
+          <nav aria-label="Footer Navigation" className="md:col-span-2">
+            <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {NAVIGATION_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="text-gray-100 text-sm hover:text-purple-400 transition-colors duration-200 inline-block"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
-        <span className="block text-gray-100 text-sm text-body sm:text-center">
-          © {new Date().getFullYear()}{" "}
-          <a href="" class="hover:underline">
-            Nexora
-          </a>
-          . All Rights Reserved.{" "}
-        </span>
-        <span className="block text-gray-100 text-sm text-body sm:text-center">
-          Developed by{" "}
-          <span className="text-gray-300">
+        <hr className="border-gray-800 my-6" />
+
+        <div className="space-y-3 mb-6">
+          <p className="text-gray-100 text-xs sm:text-sm text-center">
+            © {currentYear} <span className="font-medium">Nexora</span>. All
+            Rights Reserved.
+          </p>
+
+          <p className="text-gray-100 text-xs sm:text-sm text-center">
+            Developed by{" "}
             <a
-              className="hover:underline hover:text-purple-400"
-              target="_blank"
               href="https://github.com/coffeeespresso343"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-200 hover:text-purple-300 transition-colors duration-200 font-medium"
+              aria-label="GitHub profile of Linn Khant"
             >
               Linn Khant
             </a>
-          </span>
-        </span>
-        <span className="block text-gray-100 text-sm text-body sm:text-center">
-          [Build with Heart and too much Coffee]
-        </span>
+          </p>
+
+          <p className="text-gray-100 text-xs sm:text-sm text-center">
+            Built with Heart and too much Coffee
+          </p>
+        </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
