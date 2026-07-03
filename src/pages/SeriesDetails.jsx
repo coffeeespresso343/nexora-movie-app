@@ -121,7 +121,11 @@ const SeriesDetails = () => {
       <div className="mt-50">
         {isLoading && <Spinner />}
         {detailErrorMsg && (
-          <ErrorMessage errorMessage={detailErrorMsg} isSearchError={false} />
+          <ErrorMessage
+            errorMessage={detailErrorMsg}
+            isSearchError={false}
+            isNetworkError={true}
+          />
         )}
       </div>
     );

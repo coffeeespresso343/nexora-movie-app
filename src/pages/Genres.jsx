@@ -150,7 +150,7 @@ const Genres = () => {
 
   return (
     <div className="min-h-screen bg-black mt-12 text-white">
-      <section className="relative flex h-[60vh] min-h-70 w-full items-center overflow-hidden pt-1.5">
+      <section className="relative flex h-[70vh]  min-h-80 w-full items-center overflow-hidden pt-5 pb-5 sm:pb-10 lg:pb-5">
         <div
           className="absolute inset-0"
           style={{
@@ -180,14 +180,14 @@ const Genres = () => {
         <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-black/40"></div>
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
-          <h1 className="text-4xl text-center font-bold md:text-5xl">
+          <h1 className="text-4xl mt-10 text-center font-bold md:text-5xl">
             Browse by{" "}
             <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
               Genre
             </span>
           </h1>
 
-          <div className="mt-8">
+          <div className="mt-16 pb-20 sm:pb-10 lg:pb-10  flex w-full items-center justify-center">
             {genresError ? (
               <ErrorMessage errorMessage={genresError} />
             ) : (
@@ -217,7 +217,7 @@ const Genres = () => {
         </div>
       </section>
 
-      <div className=" mx-auto  max-w-7xl px-6 pb-20">
+      <div className="mx-auto max-w-7xl px-6 pb-5">
         <section ref={moviesRef} className="mt-10 scroll-mt-24">
           {selectedGenre ? (
             <>

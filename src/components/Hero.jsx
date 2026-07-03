@@ -62,10 +62,10 @@ const FEATURES = [
 
 const Hero = () => {
   return (
-    <section className="relative h-screen min-h-150 w-full overflow-hidden pt-16 text-white">
+    <section className="relative pt-16  border-b border-b-gray-800 pb-5 h-screen max-h-150 md:max-h-180 w-full overflow-hidden  text-white">
       <img
         src="hero.png"
-        alt=""
+        alt="Hero background"
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover object-center"
       />

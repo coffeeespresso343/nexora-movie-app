@@ -68,7 +68,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-black px-6 pb-20 pt-28 text-white">
       <div className="mx-auto max-w-2xl">
-        <h1 className="font-bold text-3xl">
+        <h1 className="font-bold text-center text-3xl">
           Your{" "}
           <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
             Profile

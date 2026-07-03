@@ -59,7 +59,7 @@ const TrendingMovies = ({}) => {
     return () => (ignore = true);
   }, []);
   return (
-    <section className="mt-14 border-t border-t-gray-800">
+    <section className="mt-5 border-b border-b-gray-800 pb-5">
       <h2 className="mt-5 text-3xl font-[Bebas_Neue] tracking-wide font-bold text-white text-center">
         Trending{" "}
         <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
@@ -80,7 +80,11 @@ const TrendingMovies = ({}) => {
             ))
           ) : errorMessage ? (
             <div className="flex-1 basis-8/8">
-              <ErrorMessage errorMessage={errorMessage} isSearchError={false} />
+              <ErrorMessage
+                errorMessage={errorMessage}
+                isSearchError={false}
+                isNetworkError={true}
+              />
             </div>
           ) : (
             trendingMovies.map((movie, index) => (

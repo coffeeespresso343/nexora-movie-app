@@ -1,6 +1,10 @@
 import React from "react";
 
-const ErrorMessage = ({ errorMessage, isSearchError = false }) => {
+const ErrorMessage = ({
+  errorMessage,
+  isSearchError = false,
+  isNetworkError = false,
+}) => {
   if (!errorMessage) return null;
 
   return (
@@ -26,7 +30,9 @@ const ErrorMessage = ({ errorMessage, isSearchError = false }) => {
       <p className="text-xs text-gray-400">
         {isSearchError
           ? "Please try again with a different search term."
-          : "Please try again later."}
+          : isNetworkError
+            ? "Check your network connection and try again."
+            : "Try again later."}
       </p>
     </div>
   );

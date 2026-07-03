@@ -10,7 +10,7 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
-        className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-40 hover:bg-gray-600"
+        className="py-1 bg-gray-700 text-white rounded disabled:opacity-40 hover:bg-gray-600"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange((p) => p + 1)}
         disabled={page === totalPages}
-        className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-40 hover:bg-gray-600 cursor-pointer"
+        className="py-1 bg-gray-700 text-white rounded disabled:opacity-40 hover:bg-gray-600 cursor-pointer"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
