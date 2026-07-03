@@ -35,7 +35,11 @@ const Navbar = () => {
     if (!isAuthenticated) navigate("/signin");
 
     const path = location.pathname;
-    let targetPage = path.startsWith("/series") ? "/series" : "/movie";
+    let targetPage = path.startsWith("/movie")
+      ? "/movie"
+      : path.startsWith("/series")
+        ? "/series"
+        : "/new-and-popular";
 
     navigate(targetPage, {
       state: {

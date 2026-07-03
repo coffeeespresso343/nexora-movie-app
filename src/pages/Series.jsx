@@ -231,7 +231,7 @@ const Series = () => {
               </p>
             ) : (
               <>
-                <ul className="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
                   {seriesList.map((series) => (
                     <SeriesCard key={series.id} series={series} />
                   ))}
