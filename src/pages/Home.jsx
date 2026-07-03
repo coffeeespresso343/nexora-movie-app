@@ -91,7 +91,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
       <div className="mx-auto max-w-7xl px-6">
-        {showTrendingMovies && <TrendingMovies />}
+        <div className="-mt-14">{showTrendingMovies && <TrendingMovies />}</div>
 
         {errorMessage ? (
           <ErrorMessage errorMessage={errorMessage} isSearchError={false} />

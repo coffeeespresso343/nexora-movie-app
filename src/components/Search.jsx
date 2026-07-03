@@ -17,7 +17,7 @@ const Search = ({ searchTerm, setSearchTerm, searchRef, placeholder }) => {
         <input
           ref={searchRef}
           type="text"
-          placeholder={placeholder || "Search movies, series..."}
+          placeholder={placeholder || "Search through movies, series..."}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           aria-label="Search movies and series"
