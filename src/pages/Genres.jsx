@@ -58,6 +58,9 @@ const Genres = () => {
     let ignore = false;
 
     const fetchGenres = async () => {
+      setIsLoading(true);
+      setErrorMessage("");
+
       const endPoint = `${API_BASE_URL}/genre/movie/list`;
 
       try {

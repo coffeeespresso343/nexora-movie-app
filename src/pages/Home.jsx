@@ -42,11 +42,11 @@ const Home = () => {
   useEffect(() => {
     let ignore = false;
 
-    setErrorMessage("");
-    setShowTrendingMovies(true);
-
     ROWS.forEach(({ endpoint }) => {
       const fetchRow = async () => {
+        setErrorMessage("");
+        setShowTrendingMovies(true);
+
         try {
           const response = await fetch(
             `${API_BASE_URL}${endpoint}?page=1`,

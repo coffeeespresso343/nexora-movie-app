@@ -120,13 +120,7 @@ const SeriesDetails = () => {
     return (
       <div className="mt-50">
         {isLoading && <Spinner />}
-        {detailErrorMsg && (
-          <ErrorMessage
-            errorMessage={detailErrorMsg}
-            isSearchError={false}
-            isNetworkError={true}
-          />
-        )}
+        {detailErrorMsg && <ErrorMessage errorMessage={detailErrorMsg} />}
       </div>
     );
   }
@@ -180,7 +174,7 @@ const SeriesDetails = () => {
                     width="15"
                     height="15"
                     viewBox="0 0 24 24"
-                    fill="none"
+                    fill="gold"
                     stroke="gold"
                     strokeWidth="1.5"
                     strokeLinecap="round"

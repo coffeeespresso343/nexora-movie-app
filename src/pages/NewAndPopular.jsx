@@ -38,6 +38,22 @@ const NewAndPopular = () => {
 
   const location = useLocation();
 
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(searchTerm);
+
+      if (searchTerm.trim()) {
+        setPage(1);
+      }
+    },
+    800,
+    [searchTerm],
+  );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (location.state?.focusSearch) {
       searchRef.current?.scrollIntoView({
@@ -52,18 +68,6 @@ const NewAndPopular = () => {
     }
   }, [location]);
 
-  useDebounce(
-    () => {
-      setDebouncedSearchTerm(searchTerm);
-
-      if (searchTerm.trim()) {
-        setPage(1);
-      }
-    },
-    800,
-    [searchTerm],
-  );
-
   const handlePageChange = (newPage) => {
     isUserPaginating.current = true;
     setPage(newPage);
@@ -71,6 +75,14 @@ const NewAndPopular = () => {
 
   useEffect(() => {
     setPage(1);
+  }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (!debouncedSearchTerm.trim()) return;
+
+    gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    window.history.replaceState({}, document.title);
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
@@ -88,6 +100,7 @@ const NewAndPopular = () => {
           : `https://api.themoviedb.org/3/trending/all/week?page=${pageNum}`;
 
         const response = await fetch(endpoint, API_OPTIONS);
+
         if (!response.ok) {
           throw new Error("Failed to fetch movies and series.");
         }
@@ -153,7 +166,7 @@ const NewAndPopular = () => {
               Popular
             </span>
           </h1>
-          <p className="text-center">
+          <p className="mt-5 text-center text-gray-300">
             Discover the latest and most popular movies and TV shows. Stay up to
             date with the hottest releases and trending content in the
             entertainment world.
@@ -184,7 +197,7 @@ const NewAndPopular = () => {
             {isLoading ? (
               <SkeletonGrid count={12} />
             ) : errorMessage ? (
-              <ErrorMessage errorMessage={errorMessage} />
+              <ErrorMessage errorMessage={errorMessage} isSearchError={true} />
             ) : (
               <>
                 <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">

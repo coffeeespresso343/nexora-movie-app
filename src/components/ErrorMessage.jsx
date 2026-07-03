@@ -28,11 +28,7 @@ const ErrorMessage = ({
 
       <p className="text-sm font-semibold text-gray-300">{errorMessage}</p>
       <p className="text-xs text-gray-400">
-        {isSearchError
-          ? "Please try again with a different search term."
-          : isNetworkError
-            ? "Check your network connection and try again."
-            : "Try again later."}
+        Check your network connection and try again.
       </p>
     </div>
   );
