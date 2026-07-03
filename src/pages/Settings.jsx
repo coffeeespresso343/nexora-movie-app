@@ -104,7 +104,7 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-black px-6 pb-20 pt-28 text-white">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl text-center font-bold">
           Account{" "}
           <span className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
             Settings

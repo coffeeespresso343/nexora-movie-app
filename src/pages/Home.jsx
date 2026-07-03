@@ -55,7 +55,7 @@ const Home = () => {
 
           if (!response.ok) {
             if (!ignore) {
-              setErrorMessage(`Failed to load movies.`);
+              setErrorMessage("Failed to load movies.");
             }
             setRowData((prev) => ({
               ...prev,
@@ -90,11 +90,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
-      <div className="mx-auto max-w-7xl px-6 pb-20">
+      <div className="mx-auto max-w-7xl px-6">
         {showTrendingMovies && <TrendingMovies />}
 
         {errorMessage ? (
-          <ErrorMessage errorMessage={errorMessage} />
+          <ErrorMessage errorMessage={errorMessage} isSearchError={false} />
         ) : (
           ROWS.map(({ title, endpoint, seeAllPath }) => (
             <MovieRow

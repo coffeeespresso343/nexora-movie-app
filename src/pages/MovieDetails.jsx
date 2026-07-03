@@ -72,9 +72,16 @@ const MovieDetails = () => {
           fetch(`${endPoint}/credits`, API_OPTIONS),
         ]);
 
-        if (!movieResult.ok || !videoResult.ok || !castResult.ok) {
-          setDetailErrorMsg("Sorry, Movie details unavailable.");
+        if (!movieResult.ok) {
           throw new Error("Failed to load movie details.");
+        }
+
+        if (!videoResult.ok) {
+          throw new Error("Failed to load trailer video.");
+        }
+
+        if (!castResult.ok) {
+          throw new Error("Failed to load top cast.");
         }
 
         const [movieData, videoData, castData] = await Promise.all([
@@ -117,7 +124,11 @@ const MovieDetails = () => {
       <div className="mt-50">
         {isLoading && <Spinner />}
         {detailErrorMsg && (
-          <ErrorMessage errorMessage={detailErrorMsg} isSearchError={false} />
+          <ErrorMessage
+            errorMessage={detailErrorMsg}
+            isSearchError={false}
+            isNetworkError={true}
+          />
         )}
       </div>
     );
