@@ -21,7 +21,7 @@ const MovieRow = ({ title, movies, isLoading, seeAllPath }) => {
   return (
     <section className="mt-14 border-b border-b-gray-800 pb-5">
       <div className="flex gap-3 items-baseline justify-self-center">
-        <h2 className="text-2xl font-[Bebas_Neue] tracking-wider font-bold text-white">
+        <h2 className="text-2xl font-[Bebas_Neue] tracking-wider font-semibold text-white">
           {title}
         </h2>
 
@@ -49,11 +49,7 @@ const MovieRow = ({ title, movies, isLoading, seeAllPath }) => {
             ))}
           </ul>
         ) : movies.length === 0 ? (
-          <ErrorMessage
-            errorMessage={"No movies available"}
-            isSearchError={false}
-            isNetworkError={true}
-          />
+          <ErrorMessage errorMessage={"No movies available"} />
         ) : (
           <ul
             ref={scrollRef}

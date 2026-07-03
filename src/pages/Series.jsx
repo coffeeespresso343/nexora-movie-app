@@ -6,6 +6,7 @@ import SkeletonGrid from "../components/SkeletonGrid";
 import ErrorMessage from "../components/ErrorMessage";
 import Pagination from "../components/Pagination";
 import { useLocation } from "react-router-dom";
+import TrendingCard from "../components/TrendingCard";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -26,7 +27,7 @@ const Series = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSearchError, setIsSearchError] = useState(false);
+  const [isMovieFallback, setIsMovieFallback] = useState(false);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -64,6 +65,91 @@ const Series = () => {
   }, []);
 
   useEffect(() => {
+    let ignore = false;
+
+    const fetchSeries = async (query, pageNum) => {
+      setIsLoading(true);
+      setErrorMessage("");
+      setIsMovieFallback(false);
+
+      try {
+        const endPoint = query
+          ? `${API_BASE_URL}/search/tv?query=${encodeURIComponent(query)}&page=${pageNum}`
+          : `${API_BASE_URL}/discover/tv?sort_by=popularity.desc&page=${pageNum}`;
+
+        const response = await fetch(endPoint, API_OPTIONS);
+
+        if (!response.ok) throw new Error("Error loading series.");
+
+        const data = await response.json();
+
+        if (ignore) return;
+
+        // No series results - retry with movie search is there is a query
+
+        if ((!data.results || data.results.length === 0) && query) {
+          const movieResponse = await fetch(
+            `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${pageNum}`,
+            API_OPTIONS,
+          );
+
+          if (!movieResponse.ok) throw new Error("Failed to fetch movies.");
+
+          const movieData = await movieResponse.json();
+
+          if (ignore) return;
+
+          if (!movieData.results || movieData.results.length === 0) {
+            setSeriesList([]);
+            setTotalPages(1);
+            setErrorMessage(
+              query ? `No results found for "${query}"` : "No results found",
+            );
+            return;
+          }
+
+          // Add media type, so that MovieCard knows how to render and route there
+          const movieResults = movieData.results.map((movie) => ({
+            ...movie,
+            media_type: "movie",
+          }));
+
+          setSeriesList(movieResults);
+          setTotalPages(Math.min(movieData.total_pages || 1, MAX_TMDB_PAGES));
+          setIsMovieFallback(true);
+          return;
+        }
+
+        if (!data.results || data.results.length === 0) {
+          setSeriesList([]);
+          setTotalPages(1);
+          setErrorMessage(
+            query ? `No results found for "${query}"` : "No series available.",
+          );
+        }
+
+        setSeriesList(data.results);
+        setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
+      } catch (error) {
+        console.error(error);
+        if (!ignore) {
+          setErrorMessage("Error loading series.");
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchSeries(debouncedSearchTerm, page);
+
+    return () => {
+      ignore = true;
+    };
+  }, [debouncedSearchTerm, page]);
+
+  useEffect(() => {
     if (!debouncedSearchTerm.trim()) return;
 
     resultRef.current?.scrollIntoView({
@@ -86,57 +172,6 @@ const Series = () => {
       }, 500);
     }
   }, [location]);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const fetchSeries = async (query, pageNum) => {
-      setIsLoading(true);
-      setErrorMessage("");
-      setIsSearchError(false);
-
-      try {
-        const endPoint = query
-          ? `${API_BASE_URL}/search/tv?query=${encodeURIComponent(query)}&page=${pageNum}`
-          : `${API_BASE_URL}/discover/tv?sort_by=popularity.desc&page=${pageNum}`;
-
-        const response = await fetch(endPoint, API_OPTIONS);
-
-        if (!response.ok) throw new Error("Error loading series.");
-
-        const data = await response.json();
-
-        if (ignore) return;
-
-        if (!data.results || data.results.length === 0) {
-          setSeriesList([]);
-          setTotalPages(1);
-          setIsSearchError(true);
-          setErrorMessage(`No series found for "${query}"`);
-          return;
-        }
-
-        setSeriesList(data.results);
-        setTotalPages(Math.min(data.total_pages || 1, MAX_TMDB_PAGES));
-      } catch (error) {
-        console.error(error);
-        if (!ignore) {
-          setErrorMessage("Error loading series.");
-          setIsSearchError(false);
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchSeries(debouncedSearchTerm, page);
-
-    return () => {
-      ignore = true;
-    };
-  }, [debouncedSearchTerm, page]);
 
   useEffect(() => {
     if (isFirstLoad.current) {
@@ -207,11 +242,11 @@ const Series = () => {
             ref={resultRef}
             className="flex flex-col border-b border-[#8B8378]/20 pb-2"
           >
-            <h1 className="font-[Bebas_Neue] text-3xl text-center  tracking-wide text-[#F5F1E8]">
+            <h1 className="font-[Bebas_Neue] text-2xl text-center  tracking-wide text-[#F5F1E8]">
               {debouncedSearchTerm ? "Results" : "All Series"}
             </h1>
             {debouncedSearchTerm && (
-              <span className="text-center font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+              <span className="text-center font-mono text-xs uppercase tracking-widest bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
                 "{debouncedSearchTerm}"
               </span>
             )}
@@ -221,19 +256,28 @@ const Series = () => {
             {isLoading ? (
               <SkeletonGrid count={10} />
             ) : errorMessage ? (
-              <ErrorMessage
-                errorMessage={errorMessage}
-                isSearchError={isSearchError}
-              />
+              <ErrorMessage errorMessage={errorMessage} />
             ) : seriesList.length === 0 ? (
               <p className="mt-8 text-center text-gray-400">
                 No series available
               </p>
             ) : (
               <>
+                {isMovieFallback && (
+                  <div className="mb-6 rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 text-sm text-amber-300">
+                    No series match with "{debouncedSearchTerm}" - showing movie
+                    results instead.
+                  </div>
+                )}
                 <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
                   {seriesList.map((series) => (
-                    <SeriesCard key={series.id} series={series} />
+                    <li key={series.id}>
+                      {isMovieFallback ? (
+                        <TrendingCard item={series} />
+                      ) : (
+                        <SeriesCard key={series.id} series={series} />
+                      )}
+                    </li>
                   ))}
                 </ul>
 

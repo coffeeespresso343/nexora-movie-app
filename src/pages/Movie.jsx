@@ -8,6 +8,7 @@ import { updateSearchCount } from "../appwrite";
 import ErrorMessage from "../components/ErrorMessage";
 import TrendingMovies from "../components/TrendingMovies";
 import { useLocation } from "react-router-dom";
+import TrendingCard from "../components/TrendingCard";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -25,7 +26,7 @@ const MAX_TMDB_PAGES = 500;
 const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSearchError, setIsSearchError] = useState(false);
+  const [isTVFallback, setIsTVFallback] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -42,6 +43,7 @@ const Movies = () => {
 
   const location = useLocation();
 
+  //  Debounce search input - reset to page 1 on new query
   useDebounce(
     () => {
       setDebouncedSearchTerm(searchTerm);
@@ -63,17 +65,16 @@ const Movies = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Fetch movies - /search/movie for queries, /discover/movie for browse.
+  // If a search returns no movies results, silently retries with /search/tv
+  // and flags isTVFallback so the UI can explain what happened
   useEffect(() => {
     let ignore = false;
 
-    setIsLoading(true);
-    setErrorMessage("");
-    setIsSearchError(false);
-
-    const fetchMovies = async (query = "", pageNum = 1) => {
+    const fetchMovies = async (query, pageNum) => {
       setIsLoading(true);
       setErrorMessage("");
-      setIsSearchError(false);
+      setIsTVFallback(false);
 
       try {
         const endPoint = query
@@ -83,8 +84,6 @@ const Movies = () => {
         const response = await fetch(endPoint, API_OPTIONS);
 
         if (!response.ok) {
-          setIsSearchError(false);
-          setErrorMessage("Failed to load movies.");
           throw new Error("Failed to fetch movies.");
         }
 
@@ -92,12 +91,46 @@ const Movies = () => {
 
         if (ignore) return;
 
+        // No movie results - retry with TV search if there is a query
+        if ((!data.results || data.results.length === 0) && query) {
+          const tvResponse = await fetch(
+            `${API_BASE_URL}/search/tv?query=${encodeURIComponent(query)}&page=${pageNum}`,
+            API_OPTIONS,
+          );
+
+          if (!tvResponse.ok) throw new Error("Failed to fetch series.");
+
+          const tvData = await tvResponse.json();
+
+          if (ignore) return;
+
+          if (!tvData.results || tvData.results.length === 0) {
+            setMovies([]);
+            setTotalPages(1);
+            setErrorMessage(
+              query ? `No results found for "${query}"` : "No result found",
+            );
+            return;
+          }
+
+          // Add media type, so that TrendingCard knows how to render and route there
+          const tvResults = tvData.results.map((item) => ({
+            ...item,
+            media_type: "tv",
+          }));
+
+          setMovies(tvResults);
+          setTotalPages(Math.min(tvData.total_pages || 1, MAX_TMDB_PAGES));
+          setIsTVFallback(true);
+          return;
+        }
+
         if (!data.results || data.results.length === 0) {
           setMovies([]);
           setTotalPages(1);
-          setIsSearchError(true);
-          setErrorMessage(`No movies found for "${query}"`);
-          return;
+          setErrorMessage(
+            query ? `No results found for "${query}"` : "No movies available",
+          );
         }
 
         setMovies(data.results);
@@ -110,7 +143,6 @@ const Movies = () => {
         console.error(error);
         if (!ignore) {
           setErrorMessage("Error loading movies.");
-          setIsSearchError(false);
         }
       } finally {
         if (!ignore) setIsLoading(false);
@@ -122,6 +154,7 @@ const Movies = () => {
     return () => (ignore = true);
   }, [debouncedSearchTerm, page]);
 
+  // Focus search bar when navigated here via the navbar search button
   useEffect(() => {
     if (location.state?.focusSearch) {
       searchRef.current?.scrollIntoView({
@@ -136,8 +169,10 @@ const Movies = () => {
     }
   }, [location]);
 
+  // Scroll results into view when a new search completes
   useEffect(() => {
     if (!debouncedSearchTerm.trim()) return;
+
     resultRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "center",
@@ -145,6 +180,7 @@ const Movies = () => {
     window.history.replaceState({}, document.title);
   }, [debouncedSearchTerm]);
 
+  // Scroll into grid on pagination
   useEffect(() => {
     if (!isUserPaginating.current) return;
 
@@ -176,11 +212,11 @@ const Movies = () => {
               ref={resultRef}
               className="flex flex-col border-b border-[#8B8378]/20 pb-2"
             >
-              <h1 className=" font-[Bebas_Neue] text-3xl text-center  tracking-wide text-[#F5F1E8]">
+              <h1 className="font-[Bebas_Neue] text-2xl text-center  tracking-wide text-[#F5F1E8]">
                 {debouncedSearchTerm ? "Results" : "All Movies"}
               </h1>
               {debouncedSearchTerm && (
-                <span className="text-center font-mono text-xs uppercase tracking-widest text-[#8B8378]">
+                <span className="text-center font-mono text-xs uppercase tracking-widest bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
                   "{debouncedSearchTerm}"
                 </span>
               )}
@@ -190,19 +226,28 @@ const Movies = () => {
               {isLoading ? (
                 <SkeletonGrid count={10} />
               ) : errorMessage ? (
-                <ErrorMessage
-                  errorMessage={errorMessage}
-                  isSearchError={isSearchError}
-                />
+                <ErrorMessage errorMessage={errorMessage} />
               ) : movies.length === 0 ? (
                 <p className="mt-8 text-center text-gray-400">
                   No movies available
                 </p>
               ) : (
                 <>
+                  {isTVFallback && (
+                    <div className="mb-6 rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 text-sm text-amber-300">
+                      No movies match with "{debouncedSearchTerm}" - showing
+                      series results instead.
+                    </div>
+                  )}
                   <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
                     {movies.map((movie) => (
-                      <MovieCard key={movie.id} movie={movie} />
+                      <li key={movie.id} className="list-none">
+                        {isTVFallback ? (
+                          <TrendingCard item={movie} />
+                        ) : (
+                          <MovieCard movie={movie} />
+                        )}
+                      </li>
                     ))}
                   </ul>
 

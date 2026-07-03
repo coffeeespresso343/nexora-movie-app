@@ -183,7 +183,7 @@ const Profile = () => {
               Deactivate Account
             </button>
           ) : (
-            <div className="mt-4 space-y-3">
+            <div className="mt-4 space-y-3 ">
               <p>
                 Are you sure? This will sign you out and block your account
                 immediately.
