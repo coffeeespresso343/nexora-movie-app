@@ -80,11 +80,7 @@ const TrendingMovies = ({}) => {
             ))
           ) : errorMessage ? (
             <div className="flex-1 basis-8/8">
-              <ErrorMessage
-                errorMessage={errorMessage}
-                isSearchError={false}
-                isNetworkError={true}
-              />
+              <ErrorMessage errorMessage={errorMessage} />
             </div>
           ) : (
             trendingMovies.map((movie, index) => (

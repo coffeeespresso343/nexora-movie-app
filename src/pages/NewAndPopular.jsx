@@ -27,6 +27,7 @@ const NewAndPopular = () => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSearchError, setIsSearchError] = useState(false);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -90,6 +91,7 @@ const NewAndPopular = () => {
 
     const fetchItems = async (query, pageNum) => {
       setIsLoading(true);
+      setIsSearchError(false);
       setErrorMessage("");
 
       try {
@@ -116,6 +118,7 @@ const NewAndPopular = () => {
         if (filtered.length === 0) {
           setItems([]);
           setTotalPages(1);
+          setIsSearchError(true);
           setErrorMessage(
             query
               ? `No results found for "${query}"`
@@ -197,7 +200,10 @@ const NewAndPopular = () => {
             {isLoading ? (
               <SkeletonGrid count={12} />
             ) : errorMessage ? (
-              <ErrorMessage errorMessage={errorMessage} isSearchError={true} />
+              <ErrorMessage
+                errorMessage={errorMessage}
+                isSearchError={isSearchError}
+              />
             ) : (
               <>
                 <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
