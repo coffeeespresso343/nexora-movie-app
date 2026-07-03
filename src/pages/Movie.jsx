@@ -26,6 +26,7 @@ const MAX_TMDB_PAGES = 500;
 const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSearchError, setIsSearchError] = useState(false);
   const [isTVFallback, setIsTVFallback] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -74,6 +75,7 @@ const Movies = () => {
     const fetchMovies = async (query, pageNum) => {
       setIsLoading(true);
       setErrorMessage("");
+      setIsSearchError(false);
       setIsTVFallback(false);
 
       try {
@@ -107,6 +109,7 @@ const Movies = () => {
           if (!tvData.results || tvData.results.length === 0) {
             setMovies([]);
             setTotalPages(1);
+            setIsSearchError(true);
             setErrorMessage(
               query ? `No results found for "${query}"` : "No result found",
             );
@@ -128,6 +131,7 @@ const Movies = () => {
         if (!data.results || data.results.length === 0) {
           setMovies([]);
           setTotalPages(1);
+          setIsSearchError(true);
           setErrorMessage(
             query ? `No results found for "${query}"` : "No movies available",
           );
@@ -226,7 +230,10 @@ const Movies = () => {
               {isLoading ? (
                 <SkeletonGrid count={10} />
               ) : errorMessage ? (
-                <ErrorMessage errorMessage={errorMessage} />
+                <ErrorMessage
+                  errorMessage={errorMessage}
+                  isSearchError={isSearchError}
+                />
               ) : movies.length === 0 ? (
                 <p className="mt-8 text-center text-gray-400">
                   No movies available

@@ -27,6 +27,8 @@ const Series = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSearchError, setIsSearchError] = useState(false);
+
   const [isMovieFallback, setIsMovieFallback] = useState(false);
 
   const [page, setPage] = useState(1);
@@ -70,6 +72,7 @@ const Series = () => {
     const fetchSeries = async (query, pageNum) => {
       setIsLoading(true);
       setErrorMessage("");
+      setIsSearchError(false);
       setIsMovieFallback(false);
 
       try {
@@ -102,6 +105,7 @@ const Series = () => {
           if (!movieData.results || movieData.results.length === 0) {
             setSeriesList([]);
             setTotalPages(1);
+            setIsSearchError(true);
             setErrorMessage(
               query ? `No results found for "${query}"` : "No results found",
             );
@@ -123,6 +127,7 @@ const Series = () => {
         if (!data.results || data.results.length === 0) {
           setSeriesList([]);
           setTotalPages(1);
+          setIsSearchError(true);
           setErrorMessage(
             query ? `No results found for "${query}"` : "No series available.",
           );
@@ -256,7 +261,10 @@ const Series = () => {
             {isLoading ? (
               <SkeletonGrid count={10} />
             ) : errorMessage ? (
-              <ErrorMessage errorMessage={errorMessage} />
+              <ErrorMessage
+                errorMessage={errorMessage}
+                isSearchError={isSearchError}
+              />
             ) : seriesList.length === 0 ? (
               <p className="mt-8 text-center text-gray-400">
                 No series available
