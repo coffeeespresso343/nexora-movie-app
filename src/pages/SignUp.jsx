@@ -3,17 +3,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
+  const { signup, loginWithGoogle, isLoading } = useAuth();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState("");
   const [showNotice, setShowNotice] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showGoogleNotice, setShowGoogleNotice] = useState(false);
-
-  const navigate = useNavigate();
-
-  const { signup, loginWithGoogle, isLoading } = useAuth();
 
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname || "/";
@@ -126,15 +127,59 @@ const SignUp = () => {
             <label htmlFor="password" className="text-sm text-gray-300">
               Password*
             </label>
-            <input
-              className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none transition focus:border-purple-500/60"
-              type="password"
-              id="password"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-            />
+
+            <div className="relative mt-1">
+              <input
+                className="mt-1 pr-11 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none transition focus:border-purple-500/60"
+                type={showPassword ? "text" : "password"}
+                minLength={8}
+                id="password"
+                value={password}
+                required
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-white"
+              >
+                {showPassword ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+                    <path d="m2 2 20 20" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
           {formError && <p className="text-sm text-red-400">{formError}</p>}
