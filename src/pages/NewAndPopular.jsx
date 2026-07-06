@@ -183,7 +183,7 @@ const NewAndPopular = () => {
         />
 
         <section ref={gridRef} className="mt-10 scroll-mt-24">
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl text-center font-bold text-white">
             {debouncedSearchTerm ? (
               <>
                 Result for{" "}

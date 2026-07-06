@@ -105,7 +105,7 @@ const SignIn = () => {
         <button
           type="button"
           title="coming soon..."
-          onClick={setShowGoogleNotice}
+          onClick={handleGoogleLogin}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium transition hover:bg-white/10 "
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
