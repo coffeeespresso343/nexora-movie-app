@@ -245,14 +245,46 @@ export function AuthProvider({ children }) {
     } catch (error) {
       return {
         success: false,
-        error: error?.message || "Faild to remove avatar.",
+        error: error?.message || "Failed to remove avatar.",
       };
     }
   }, []);
 
-  const deActiveAccount = useCallback(async () => {
-    console.log("DEACTIVE ACCOUNT");
-  }, []);
+  // Soft-delete: blocks the account from logging in again.
+  // No erase the underlying user data
+  const deactivateAccount = useCallback(async (password) => {
+    try {
+      await account.updatePassword({
+        password,
+        oldPassword: password,
+      });
+
+      await account.updateStatus();
+
+      try {
+        await account.deleteSession({
+          sessionId: "current",
+        });
+      } catch {}
+
+      dispatch({ type: "LOGOUT" });
+      return { success: true };
+    } catch (error) {
+      const message =
+        error?.message || "Acccount deactivation failed. Try again later.";
+      const isWrongPassword =
+        message.toLowerCase().includes("invalid") ||
+        message.toLowerCase().includes("password") ||
+        message.toLowerCase().includes("credentails");
+
+      return {
+        success: false,
+        error: isWrongPassword
+          ? "Incorrect password. Please try again."
+          : message,
+      };
+    }
+  });
 
   const value = {
     user: state.user,
@@ -269,7 +301,7 @@ export function AuthProvider({ children }) {
     updateUserPassword,
     updateAvatar,
     removeAvatar,
-    deActiveAccount,
+    deactivateAccount,
     getAvatarUrl,
   };
 

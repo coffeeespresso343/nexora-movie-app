@@ -17,6 +17,9 @@ const AuthCallback = () => {
     const userId = searchParams.get("userId");
     const secret = searchParams.get("secret");
 
+    console.log("USER ID: " + userId);
+    console.log("SECRET: " + secret);
+
     if (!userId || !secret) {
       navigate("/signin");
       return;

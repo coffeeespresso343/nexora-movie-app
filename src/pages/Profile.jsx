@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   const {
     user,
     getAvatarUrl,
@@ -10,7 +12,7 @@ const Profile = () => {
     updateUserEmail,
     updateAvatar,
     removeAvatar,
-    deActiveAccount,
+    deactivateAccount,
   } = useAuth();
 
   const fileInputRef = useRef(null);
@@ -20,6 +22,7 @@ const Profile = () => {
   const [avatarError, setAvatarError] = useState("");
 
   const [showDeactivateConfirm, setShowDeactivateConfirm] = useState(false);
+  const [deactivatePassword, setDeactivatePassword] = useState("");
   const [isDeactivating, setIsDeactivating] = useState(false);
   const [deactiveError, setDeactivateError] = useState("");
 
@@ -63,7 +66,30 @@ const Profile = () => {
     }
   };
 
-  const handleDeactive = async () => {};
+  const handleDeactivate = async () => {
+    if (!deactivatePassword) {
+      setDeactivateError("Please enter your password to confirm.");
+      return;
+    }
+    setIsDeactivating(true);
+    setDeactivateError("");
+    const result = await deactivateAccount(deactivatePassword);
+    setIsDeactivating(false);
+    // navigate("/");
+
+    if (result.success) {
+      navigate("/");
+    } else {
+      setDeactivateError(result.error);
+      setDeactivatePassword("");
+    }
+  };
+
+  const handleCancelDeactivate = () => {
+    setShowDeactivateConfirm(false);
+    setDeactivatePassword("");
+    setDeactivateError("");
+  };
 
   return (
     <div className="min-h-screen bg-black px-6 pb-20 pt-28 text-white">
@@ -185,31 +211,41 @@ const Profile = () => {
           ) : (
             <div className="mt-4 space-y-3 ">
               <p>
-                Are you sure? This will sign you out and block your account
-                immediately.
+                This will immediately sign you out and block your account.
+                <br />
+                Enter your password to confirm.
               </p>
+
+              <input
+                type="password"
+                value={deactivatePassword}
+                onChange={(e) => setDeactivatePassword(e.target.value)}
+                placeholder="Enter your password"
+                disabled={isDeactivating}
+                className="w-full rounded-lg border border-red-500/30 bg-black-40 px-4 py-2.5 text-white outline-none transition placeholder:text-gray-600 focus:border-red-500/60 disabled:opacity-50"
+              />
+              {deactiveError && (
+                <p className="text-sm text-red-400">{deactiveError}</p>
+              )}
+
               <div className="flex gap-3">
                 <button
                   type="button"
-                  onClick={handleDeactive}
-                  disabled={isDeactivating}
-                  title="Coming soon"
-                  className=" cursor-not-allowed rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
+                  onClick={handleDeactivate}
+                  disabled={isDeactivating || !deactivatePassword}
+                  className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60 cursor-pointer"
                 >
                   {isDeactivating ? "Deactivating..." : "Yes, deactivate"}
                 </button>
                 <button
-                  onClick={() => setShowDeactivateConfirm(false)}
+                  onClick={handleCancelDeactivate}
                   type="button"
                   disabled={isDeactivating}
-                  className="rounded-full border border-white/15 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10"
+                  className="rounded-full border border-white/15 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10 cursor-pointer"
                 >
                   Cancel
                 </button>
               </div>
-              {deactiveError && (
-                <p className="text-sm text-red-400">{deactiveError}</p>
-              )}
             </div>
           )}
         </section>
