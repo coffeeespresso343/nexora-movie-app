@@ -101,6 +101,7 @@ const Footer = () => {
                 <li key={label}>
                   <Link
                     to={to}
+                    onClick={() => window.scrollTo(0, 0)}
                     className="text-sm text-gray-400 transition hover:text-purple-400"
                   >
                     {label}
@@ -127,7 +128,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-center gap-3 border-t border-white/10 pt-8 sm:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-center gap-2 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-xs text-gray-500">
             &copy; {currentYear} Nexora. All rights reserved.
           </p>

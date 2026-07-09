@@ -3,6 +3,17 @@
 
 @import "tailwindcss";
 
+@keyframes toast-shrink {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0;
+    }
+
+}
+
 @theme {
     --color-primary: #030014;
     --color-light-100: #cecefb;

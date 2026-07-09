@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "../context/ToastContext";
 
 const ProfileMenu = ({ onClose, triggerRef }) => {
   const { user, logout, getAvatarUrl } = useAuth();
+  const { info } = useToast();
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
@@ -15,6 +17,7 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
     setIsLoggingOut(true);
     await logout();
     onClose();
+    info("You have been signed out.");
     navigate("/");
   };
 
@@ -108,12 +111,11 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
         disabled={isLoggingOut}
         className="flex w-full ml-1 items-center gap-2 px-4 py-2 text-left text-sm text-red-400 transition hover:bg-red-500/10 hover:text-red-300 disabled:opacity-60"
       >
-        {isLoggingOut ? "Logging out..." : "Log Out"}
         {isLoggingOut ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -127,8 +129,8 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
         ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -141,6 +143,7 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           </svg>
         )}
+        {isLoggingOut ? "Logging out..." : "Log Out"}
       </button>
     </div>
   );

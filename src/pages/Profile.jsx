@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const Profile = () => {
     removeAvatar,
     deactivateAccount,
   } = useAuth();
+
+  const { success, error } = useToast();
 
   const fileInputRef = useRef(null);
   const avatarUrl = getAvatarUrl(user?.prefs?.avatarFileId, 160);
@@ -51,6 +54,7 @@ const Profile = () => {
     if (!result.success) {
       setAvatarError(result.error);
     }
+    success("Avatar updated.");
 
     e.target.value = ""; // allow re-selecting the same file later
   };
@@ -64,6 +68,7 @@ const Profile = () => {
     if (!result.success) {
       setAvatarError(result.error);
     }
+    success("Avatar removed.");
   };
 
   const handleDeactivate = async () => {
@@ -185,9 +190,9 @@ const Profile = () => {
             <p className=" mt-1 text-gray-400">••••••••</p>
           </div>
           <p className="mt-6 text-xs text-gray-500">
-            Want to change your username, email or password?{" "}
+            Want to change your username, email or password? Go to{" "}
             <Link to="/settings" className="underline hover:text-gray-300">
-              Go to Account Settings
+              Account Settings
             </Link>
           </p>
         </section>

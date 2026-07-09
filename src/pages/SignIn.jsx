@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const { login, loginWithGoogle, isLoading } = useAuth();
+  const { success, error } = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +29,7 @@ const SignIn = () => {
 
     if (result.success) {
       navigate(redirectTo);
+      success("Welcome back!");
     } else {
       setFormError(result.error);
     }
@@ -83,7 +86,7 @@ const SignIn = () => {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-white"
+                className="absolute right-4 top-1/2 -translate-y-1/3 text-gray-400 transition hover:text-white"
               >
                 {showPassword ? (
                   <svg
