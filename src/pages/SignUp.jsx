@@ -14,7 +14,6 @@ const SignUp = () => {
   const [formError, setFormError] = useState("");
   const [showNotice, setShowNotice] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showGoogleNotice, setShowGoogleNotice] = useState(false);
 
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname || "/";
@@ -25,13 +24,6 @@ const SignUp = () => {
       return () => clearTimeout(timer);
     }, 600);
   }, []);
-
-  const handleGoogleLogin = () => {
-    const timer = setTimeout(() => {
-      setShowGoogleNotice(timer);
-      return () => clearTimeout(timer);
-    }, 600);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -202,7 +194,7 @@ const SignUp = () => {
         <button
           type="button"
           title="coming soon..."
-          onClick={handleGoogleLogin}
+          onClick={loginWithGoogle}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium text-white transition hover:bg-white/10"
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
@@ -225,35 +217,6 @@ const SignUp = () => {
           </svg>
           Continue with Google
         </button>
-
-        <div
-          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4 mb-10 md:mb-8 max-h-30 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
-        >
-          <div className="rounded-sm border bg-amber-400/5 border-amber-400/10 p-2">
-            <div className="mt-2 flex flex-col items-center gap-1  text-center text-xs text-amber-400 p-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-                <path d="M12 8v4" />
-                <path d="M12 16h.01" />
-              </svg>
-              <h2 className="text-sm font-semibold text-amber-400">
-                Sorry for the inconvenience
-              </h2>
-              <p>Continue with Google is not available yet.</p>
-              <p>I will add this feature later.</p>
-            </div>
-          </div>
-        </div>
 
         <p className="mt-6 text-center text-sm text-gray-400">
           Already have an account?{" "}

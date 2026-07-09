@@ -112,17 +112,11 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = useCallback(() => {
     const baseUrl = window.location.origin;
 
-    account.createOAuth2Token({
+    account.createOAuth2Session({
       provider: OAuthProvider.Google,
       success: `${baseUrl}/auth/callback`,
-      failure: `${baseUrl}/signin`,
+      failure: `${baseUrl}/oauth-failed`,
     });
-
-    // account.createOAuth2Session({
-    //   provider: OAuthProvider.Google,
-    //   success: `${baseUrl}/auth/callback`,
-    //   failure: `${baseUrl}/signin`,
-    // });
   }, []);
 
   const completeOAuthSession = useCallback(async (userId, secret) => {

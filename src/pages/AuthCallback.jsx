@@ -20,14 +20,22 @@ const AuthCallback = () => {
     console.log("USER ID: " + userId);
     console.log("SECRET: " + secret);
 
-    if (!userId || !secret) {
-      navigate("/signin");
-      return;
-    }
+    // if (!userId || !secret) {
+    //   navigate("/signin");
+    //   return;
+    // }
 
-    completeOAuthSession(userId, secret).then((result) => {
-      navigate(result.success ? "/" : "/signin");
-    });
+    // completeOAuthSession(userId, secret).then((result) => {
+    //   navigate(result.success ? "/" : "/signin");
+    // });
+
+    if (userId && secret) {
+      completeOAuthSession(userId, secret).then((result) => {
+        navigate(result.success ? "/" : "/signin");
+      });
+    } else {
+      navigate("/");
+    }
   }, [searchParams, completeOAuthSession, navigate]);
 
   return (

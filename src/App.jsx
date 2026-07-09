@@ -15,6 +15,7 @@ import AuthCallback from "./pages/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import OAuthFail from "./pages/OAuthFail";
 
 const AppLayout = ({ children }) => {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/oauth-fail" element={<OAuthFail />} />
 
         {/* Protected */}
         <Route

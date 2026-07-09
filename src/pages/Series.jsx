@@ -247,14 +247,18 @@ const Series = () => {
             ref={resultRef}
             className="flex flex-col border-b border-[#8B8378]/20 pb-2"
           >
-            <h1 className="font-[Bebas_Neue] text-2xl text-center  tracking-wide text-[#F5F1E8]">
-              {debouncedSearchTerm ? "Results" : "All Series"}
-            </h1>
-            {debouncedSearchTerm && (
-              <span className="text-center font-mono text-xs uppercase tracking-widest bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-                "{debouncedSearchTerm}"
-              </span>
-            )}
+            <h2 className="text-center text-xl font-bold text-white">
+              {debouncedSearchTerm ? (
+                <>
+                  Result for{" "}
+                  <span className="bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    "{debouncedSearchTerm}"
+                  </span>
+                </>
+              ) : (
+                "All Series"
+              )}
+            </h2>
           </div>
 
           <div className="mt-5">
