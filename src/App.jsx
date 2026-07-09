@@ -16,6 +16,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import OAuthFail from "./pages/OAuthFail";
+import About from "./pages/About";
 
 const AppLayout = ({ children }) => {
   return (
@@ -38,6 +39,16 @@ const PublicLayout = ({ children }) => {
   );
 };
 
+const AboutLayout = () => {
+  return (
+    <>
+      <Navbar />
+      <About />
+      <Footer />
+    </>
+  );
+};
+
 function App() {
   return (
     <main>
@@ -51,6 +62,8 @@ function App() {
             </PublicLayout>
           }
         />
+
+        <Route path="/about" element={<AboutLayout />} />
 
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

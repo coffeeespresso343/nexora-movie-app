@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
     account.createOAuth2Session({
       provider: OAuthProvider.Google,
       success: `${baseUrl}/auth/callback`,
-      failure: `${baseUrl}/oauth-failed`,
+      failure: `${baseUrl}/oauth-fail`,
     });
   }, []);
 

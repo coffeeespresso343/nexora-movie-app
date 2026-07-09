@@ -17,9 +17,6 @@ const AuthCallback = () => {
     const userId = searchParams.get("userId");
     const secret = searchParams.get("secret");
 
-    console.log("USER ID: " + userId);
-    console.log("SECRET: " + secret);
-
     // if (!userId || !secret) {
     //   navigate("/signin");
     //   return;
@@ -31,7 +28,7 @@ const AuthCallback = () => {
 
     if (userId && secret) {
       completeOAuthSession(userId, secret).then((result) => {
-        navigate(result.success ? "/" : "/signin");
+        navigate(result.success ? "/" : "/oauth-fail");
       });
     } else {
       navigate("/");

@@ -10,9 +10,10 @@ const NAV_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", href: "#privacy" },
-  { label: "Terms of Use", href: "#terms" },
-  { label: "Contact", href: "#contact" },
+  { label: "Privacy Policy", to: "/about" },
+  { label: "Terms of Use", to: "/about" },
+  { label: "Contact", to: "/about" },
+  { label: "About", to: "/about" },
 ];
 
 const SOCIALS = [
@@ -96,14 +97,14 @@ const Footer = () => {
               Legal
             </h4>
             <ul className="space-y-3">
-              {LEGAL_LINKS.map(({ label, href }) => (
+              {LEGAL_LINKS.map(({ label, to }) => (
                 <li key={label}>
-                  <a
-                    href={href}
+                  <Link
+                    to={to}
                     className="text-sm text-gray-400 transition hover:text-purple-400"
                   >
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

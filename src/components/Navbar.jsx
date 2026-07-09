@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { to: "/series", label: "Series" },
   { to: "/genres", label: "Genres" },
   { to: "/new-and-popular", label: "New & Popular" },
+  { to: "/about", label: "About" },
 ];
 
 const Navbar = () => {
