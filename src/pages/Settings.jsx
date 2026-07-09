@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const Settings = () => {
   const { user, updateProfileName, updateUserEmail, updateUserPassword } =
     useAuth();
+
+  const { success, error } = useToast();
 
   const [name, setName] = useState(user?.name || "");
   const [isSavingName, setIsSavingName] = useState(false);
@@ -21,6 +24,8 @@ const Settings = () => {
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const handleNameSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +48,7 @@ const Settings = () => {
 
     if (result.success) {
       setNameMessage("Username updated successfully.");
+      success(`Username updated to "${name}"`);
     } else {
       setNameError(result.error);
     }
@@ -72,6 +78,7 @@ const Settings = () => {
     if (result.success) {
       setEmailMessage("Email updated successfully.");
       setEmailPassword("");
+      success(`Email updated to "${email}"`);
     } else {
       setEmailError(result.error);
     }
@@ -96,6 +103,7 @@ const Settings = () => {
       setPasswordMessage("Password updated successfully.");
       setCurrentPassword("");
       setNewPassword("");
+      success("Password changed.");
     } else {
       setPasswordError(result.error);
     }
@@ -171,6 +179,7 @@ const Settings = () => {
                 id="email-current-password"
                 required
                 value={emailPassword}
+                placeholder="Enter current password"
                 onChange={(e) => setEmailPassword(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none focus:border-purple-500/60"
               />
@@ -214,22 +223,64 @@ const Settings = () => {
                 id="current-password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter current password"
                 className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none focus:border-purple-500/60"
               />
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="new-password" className="text-sm text-gray-300">
                 New Password
               </label>
               <input
-                type="password"
+                type={showNewPassword ? "text" : "password"}
                 id="new-password"
                 required
                 minLength={8}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-white outline-none focus:border-purple-500/60"
+                placeholder="Enter new password"
+                className="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 pr-11 text-white outline-none focus:border-purple-500/60"
               />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword((v) => !v)}
+                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                className="absolute right-4 top-1/2 translate-y-1/3 text-gray-400 transition hover:text-white"
+              >
+                {showNewPassword ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+                    <path d="m2 2 20 20" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
             </div>
             {passwordMessage && (
               <p className="text-sm text-green-400">{passwordMessage}</p>

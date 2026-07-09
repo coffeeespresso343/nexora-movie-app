@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
   const { signup, loginWithGoogle, isLoading } = useAuth();
+  const { success } = useToast();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,6 +41,7 @@ const SignUp = () => {
 
     if (result.success) {
       navigate(redirectTo);
+      success("Account created! Welcome to Nexora.");
     } else {
       setFormError(result.error);
     }
@@ -135,7 +138,7 @@ const SignUp = () => {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-white"
+                className="absolute right-4 top-1/2 -translate-y-1/3 text-gray-400 transition hover:text-white"
               >
                 {showPassword ? (
                   <svg

@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { completeOAuthSession } = useAuth();
+  const { success, error } = useToast();
 
   const hasRun = useRef(false); // guards against double-invocation in dev (StrictMode)
 
@@ -25,9 +27,11 @@ const AuthCallback = () => {
 
     if (userId && secret) {
       completeOAuthSession(userId, secret).then((result) => {
+        success("Signed in with Google.");
         navigate(result.success ? "/" : "/oauth-fail");
       });
     } else {
+      error("Google sigin-in failed.");
       navigate("/oauth-fail");
     }
   }, [searchParams, completeOAuthSession, navigate]);
