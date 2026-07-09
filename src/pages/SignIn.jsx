@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,7 +13,7 @@ const SignIn = () => {
 
   const [formError, setFormError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showGoogleNotice, setShowGoogleNotice] = useState(false);
+  const googleNoticeTimerRef = useRef(null);
 
   const redirectTo = location.state?.from?.pathname || "/";
   const message = location.state?.message;
@@ -32,13 +32,6 @@ const SignIn = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    const timer = setTimeout(() => {
-      setShowGoogleNotice(timer);
-      return () => clearTimeout(timer);
-    }, 600);
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center px-6 bg-black text-white">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/8 p-8">
@@ -49,7 +42,7 @@ const SignIn = () => {
           </span>
         </h1>
         {message ? (
-          <p className="mt-2 text-sm text-center text-amber-400 ">{message}</p>
+          <p className="mt-2 text-sm text-center text-amber-400">{message}</p>
         ) : (
           <p className="mt-2 text-sm text-center text-gray-400">
             Please sign in to continue watching.
@@ -89,7 +82,7 @@ const SignIn = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? "Hide password" : "Hide password"}
+                aria-label={showPassword ? "Hide password" : "Show password"}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-white"
               >
                 {showPassword ? (
@@ -149,7 +142,7 @@ const SignIn = () => {
         <button
           type="button"
           title="coming soon..."
-          onClick={handleGoogleLogin}
+          onClick={loginWithGoogle}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-medium transition hover:bg-white/10 "
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
@@ -172,35 +165,6 @@ const SignIn = () => {
           </svg>
           Continue with Google
         </button>
-
-        <div
-          className={`transition-all duration-600 ${showGoogleNotice ? "mt-4 mb-12 md:mb-8 max-h-30 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}`}
-        >
-          <div className="rounded-sm border bg-amber-400/5 border-amber-400/10 p-2">
-            <div className="mt-2 flex flex-col items-center gap-1  text-center text-xs text-amber-400 p-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-                <path d="M12 8v4" />
-                <path d="M12 16h.01" />
-              </svg>
-              <h2 className="text-sm font-semibold text-amber-400">
-                Sorry for the inconvenience
-              </h2>
-              <p>Continue with Google is not available yet.</p>
-              <p>I will add this feature later.</p>
-            </div>
-          </div>
-        </div>
 
         <p className="mt-6 text-center text-sm text-gray-400">
           Don't have an account?{" "}
