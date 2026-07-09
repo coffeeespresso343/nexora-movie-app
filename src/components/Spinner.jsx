@@ -6,7 +6,7 @@ const Spinner = () => {
       <div role="status" className="flex flex-col items-center gap-4">
         <svg
           aria-hidden="true"
-          className="w-10 h-10 text-neutral-tertiary animate-spin fill-brand"
+          className="w-14 h-14 text-neutral-tertiary animate-spin fill-brand"
           viewBox="0 0 100 101"
           fill="indigo"
           xmlns="http://www.w3.org/2000/svg"
