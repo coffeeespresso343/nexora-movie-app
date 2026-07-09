@@ -80,7 +80,7 @@ const Navbar = () => {
         </Link>
 
         <nav className="hidden md:flex">
-          <ul className="flex gap-6 text-sm font-medium text-gray-300">
+          <ul className="flex gap-4 text-sm font-medium text-gray-300">
             {NAV_LINKS.map(({ to, label }) => {
               const isActive = location.pathname === to;
 
