@@ -99,7 +99,7 @@ const TrendingMovies = ({}) => {
                       movie.title || movie.searchTerm || "Trending movie poster"
                     }
                     loading="lazy"
-                    className="h-56 w-36 rounded-xl border border-white/10 object-cover transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40"
+                    className="h-56 w-36 rounded-xl border border-white/10 object-cover transition-all duration-300 ease-out shadow-2xl shadow-purple-500/20 group-hover:-translate-y-1.5 group-hover:border-purple-500/40"
                   />
                 </Link>
               </li>

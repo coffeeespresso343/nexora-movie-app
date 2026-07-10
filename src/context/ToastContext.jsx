@@ -2,6 +2,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -78,7 +79,7 @@ const ICONS = {
 };
 
 const STYLES = {
-  succes: {
+  success: {
     container: "border-green-500/30 bg-green-500/10",
     icon: "text-green-400",
     bar: "bg-green-400",
@@ -104,13 +105,28 @@ const STYLES = {
 };
 
 const DEFAULT_DURATION = 4000;
+const EXIT_DURATION = 300;
 
 const Toast = ({ toast, onDismiss }) => {
   const style = STYLES[toast.type] || STYLES.info;
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const animationClass =
+    toast.exiting || !mounted
+      ? "translate-x-full opacity-0"
+      : "translate-x-0 opacity-100";
+
   return (
     <div
-      className={`relative flex w-80 items-start gap-3 overflow-hidden rounded-xl border backdrop-blur-md px-4 py-3.5 shadow-xl transition-all duration-300 ${style.container}`}
+      className={`relative flex w-80 items-start gap-3 overflow-hidden rounded-xl border backdrop-blur-md px-4 py-3.5 shadow-xl 
+        transition-all ease-in-out ${animationClass} ${style.container}`}
+      style={{ transitionDuration: `${EXIT_DURATION}` }}
     >
       <div
         className={`absolute bottom-0 left-0 h-0.5 ${style.bar}`}
@@ -175,7 +191,12 @@ export const ToastProvider = ({ children }) => {
   const idRef = useRef(0);
 
   const dismiss = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    setToasts((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)),
+    );
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, EXIT_DURATION);
   }, []);
 
   const toast = useCallback(
@@ -185,7 +206,7 @@ export const ToastProvider = ({ children }) => {
 
       setToasts((prev) => [
         ...prev,
-        { id, type, message, title: options.title, duration },
+        { id, type, message, title: options.title, duration, exiting: false },
       ]);
 
       setTimeout(() => dismiss(id), duration);

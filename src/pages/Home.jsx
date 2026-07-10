@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import MovieRow from "../components/MovieRow";
 import TrendingMovies from "../components/TrendingMovies";
 import ErrorMessage from "../components/ErrorMessage";
+import { useToast } from "../context/ToastContext";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -27,6 +28,8 @@ const ROWS = [
 ];
 
 const Home = () => {
+  const { info, success, error } = useToast();
+
   const [showTrendingMovies, setShowTrendingMovies] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [rowData, setRowData] = useState(() =>
@@ -75,6 +78,9 @@ const Home = () => {
         } catch (error) {
           console.error(error);
           if (!ignore) {
+            error("Check your network connection and try again.", {
+              title: "Failed to load movies.",
+            });
             setRowData((prev) => ({
               ...prev,
               [endpoint]: { movies: [], isLoading: false },
