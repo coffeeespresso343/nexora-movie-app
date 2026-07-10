@@ -19,7 +19,7 @@ const SeriesCard = ({ series }) => {
     >
       <div
         className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all
-                 duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-purple-500/40 group-hover:shadow-lg group-hover:shadow-purple-500/20"
+                 duration-300 ease-out shadow-lg shadow-purple-500/20 group-hover:-translate-y-1.5 group-hover:border-purple-500/40 group-hover:shadow-lg group-hover:shadow-purple-500/25"
       >
         <div className="relative aspect-2/3 w-full overflow-hidden">
           <img

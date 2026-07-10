@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const TECH_STACK = [
   { label: "React", description: "UI library" },
@@ -180,6 +181,8 @@ const FEATURES = [
 ];
 
 const About = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* HERO */}
@@ -212,7 +215,7 @@ const About = () => {
 
       {/* What is Nexora */}
       <section className="mx-auto max-w-4xl px-6 pb-20">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 md:p-10">
+        <div className="rounded-2xl border shadow-lg shadow-purple-500/20 border-white/10 bg-white/5 p-8 md:p-10">
           <h2 className="text-2xl font-bold">
             What is{" "}
             <span className="bg-linear-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent">
@@ -250,7 +253,7 @@ const About = () => {
           {FEATURES.map(({ title, description, icon }) => (
             <div
               key={title}
-              className="rounded-xl border border-white/10 bg-white/5 p-5 flex gap-4"
+              className="rounded-xl border border-white/10 bg-white/5 p-5 flex gap-4 shadow-lg shadow-purple-500/20 transition duration-300 hover:-translate-y-0.5"
             >
               <span className="mt-0.5 shrink-0 text-purple-400">{icon}</span>
               <div>
@@ -285,24 +288,26 @@ const About = () => {
             </div>
           ))}
         </div>
-        <p className="mt-6 text-sm text-gray-500">
-          Movie and series data provided by{" "}
-          <a
-            href="https://www.themoviedb.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-purple-400 hover:underline"
-          >
-            TMDB
-          </a>
-          . This product uses the TMDB API but is not endorsed or certified by
-          TMDB.
-        </p>
+        <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+          <p className="text-sm text-gray-500">
+            Movie and series data provided by{" "}
+            <a
+              href="https://www.themoviedb.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-400 hover:underline"
+            >
+              TMDB
+            </a>
+            . This product uses the TMDB API but is not endorsed or certified by
+            TMDB.
+          </p>
+        </div>
       </section>
 
       {/* Developer Bio */}
       <section className="mx-auto max-w-4xl px-6 pb-20">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 md:p-10">
+        <div className="rounded-2xl border shadow-lg shadow-purple-500/20 border-white/10 bg-white/5 p-8 md:p-10">
           <div className="flex flex-col sm:flex-row gap-6 items-center">
             <div className="shrink-0 rounded-full h-30 w-30">
               <img
@@ -382,15 +387,25 @@ const About = () => {
         </p>
 
         <div className="mt-6 flex justify-center gap-4">
-          <Link
-            to="/signup"
-            className="rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:brightness-110 hover:-translate-y-1"
-          >
-            Get Started
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/movie"
+              className="rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition duration-300 hover:brightness-110 hover:-translate-y-1"
+            >
+              Start Explore
+            </Link>
+          ) : (
+            <Link
+              to="/signup"
+              className="rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition duration-300 hover:brightness-110 hover:-translate-y-1"
+            >
+              Get Started
+            </Link>
+          )}
+
           <Link
             to="/"
-            className="rounded-full border border-white/15 px-6 py-3 text-sm text-gray-300 transition hover:bg-white/10 hover:-translate-y-1"
+            className="rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-white/10 active:scale-95"
           >
             Browse Home
           </Link>

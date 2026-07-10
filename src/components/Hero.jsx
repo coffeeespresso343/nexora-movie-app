@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const FEATURES = [
   {
@@ -98,7 +99,7 @@ const Hero = () => {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 to="/movie"
-                className="flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:brightness-110 active:scale-95"
+                className="flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition duration-300 ease-in-out hover:-translate-y-1 hover:brightness-110 active:scale-95"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +115,7 @@ const Hero = () => {
               </Link>
               <Link
                 to="/genres"
-                className="rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/10 active:scale-95"
+                className="rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-white/10 active:scale-95"
               >
                 Browse Genres
               </Link>
