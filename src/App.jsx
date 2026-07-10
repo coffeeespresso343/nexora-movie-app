@@ -17,6 +17,8 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import OAuthFail from "./pages/OAuthFail";
 import About from "./pages/About";
+import { useToast } from "./context/ToastContext";
+import { useEffect } from "react";
 
 const AppLayout = ({ children }) => {
   return (
@@ -50,6 +52,22 @@ const AboutLayout = () => {
 };
 
 function App() {
+  const { info } = useToast();
+
+  useEffect(() => {
+    const name = localStorage.getItem("nexora_username");
+    const isActiveTab = sessionStorage.getItem("nexora_active_tab");
+
+    if (name && !isActiveTab) {
+      sessionStorage.removeItem("nexora_active_tab", "1");
+      setTimeout(() => {
+        info(`Welcome back, ${name}!`);
+      }, 500);
+    } else if (name) {
+      sessionStorage.setItem("nexora_active_tab", "1");
+    }
+  }, []);
+
   return (
     <main>
       <Routes>

@@ -17,7 +17,7 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
     setIsLoggingOut(true);
     await logout();
     onClose();
-    info("You have been signed out.");
+    info("See you again.", { title: "You have been signed out." });
     navigate("/");
   };
 

@@ -54,15 +54,21 @@ export function AuthProvider({ children }) {
     let ignore = false;
 
     const checkSession = async () => {
+      // await account.deleteSession({ sessionId: "current" });
+
       try {
         const currentUser = await account.get();
 
         if (!ignore) {
           dispatch({ type: "SUCCESS", payload: currentUser });
+          sessionStorage.setItem("nexora_active_tab", "1");
+
+          localStorage.setItem("nexora_username", currentUser.name || "there");
         }
       } catch (error) {
         if (!ignore) {
           dispatch({ type: "LOGOUT" });
+          localStorage.removeItem("nexora_username");
         }
       }
     };
@@ -101,7 +107,7 @@ export function AuthProvider({ children }) {
       const currentUser = await account.get();
       dispatch({ type: "SUCCESS", payload: currentUser });
 
-      return { success: true };
+      return { success: true, user: currentUser };
     } catch (error) {
       const message = error?.message || "Invalid email or password.";
       dispatch({ type: "ERROR", payload: message });
@@ -140,6 +146,8 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error(error);
     } finally {
+      localStorage.removeItem("nexora_username");
+      sessionStorage.removeItem("nexora_active_tab");
       dispatch({ type: "LOGOUT" });
     }
   }, []);
