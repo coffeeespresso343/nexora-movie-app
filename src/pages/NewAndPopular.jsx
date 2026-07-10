@@ -6,6 +6,7 @@ import Pagination from "../components/Pagination";
 import ErrorMessage from "../components/ErrorMessage";
 import SkeletonGrid from "../components/SkeletonGrid";
 import { useLocation } from "react-router-dom";
+import { useToast } from "../context/ToastContext";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -21,6 +22,8 @@ const API_OPTIONS = {
 const MAX_TMDB_PAGES = 500;
 
 const NewAndPopular = () => {
+  const { info, error } = useToast();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
@@ -52,6 +55,7 @@ const NewAndPopular = () => {
   );
 
   useEffect(() => {
+    info("New titles added this week.");
     window.scrollTo(0, 0);
   }, []);
 
@@ -132,6 +136,10 @@ const NewAndPopular = () => {
       } catch (error) {
         console.error(error);
         if (!ignore) {
+          error(
+            "Failed to load movies and series. Check your network and try again.",
+          );
+
           setErrorMessage("Error loading movies and series.");
         }
       } finally {

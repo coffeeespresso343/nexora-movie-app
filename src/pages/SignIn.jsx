@@ -28,8 +28,9 @@ const SignIn = () => {
     const result = await login({ email, password });
 
     if (result.success) {
+      success(`Welcome back, ${result.user?.name || "there"}!`);
+
       navigate(redirectTo);
-      success("Welcome back!");
     } else {
       setFormError(result.error);
     }

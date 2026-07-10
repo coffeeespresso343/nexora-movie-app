@@ -27,11 +27,11 @@ const AuthCallback = () => {
 
     if (userId && secret) {
       completeOAuthSession(userId, secret).then((result) => {
-        success("Signed in with Google.");
+        success("Successfully signed in with Google! Enjoy Nexora");
         navigate(result.success ? "/" : "/oauth-fail");
       });
     } else {
-      error("Google sigin-in failed.");
+      error("Google sigin-in failed. Please try again.");
       navigate("/oauth-fail");
     }
   }, [searchParams, completeOAuthSession, navigate]);

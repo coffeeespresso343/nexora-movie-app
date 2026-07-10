@@ -7,6 +7,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import Pagination from "../components/Pagination";
 import { useLocation } from "react-router-dom";
 import TrendingCard from "../components/TrendingCard";
+import { useToast } from "../context/ToastContext";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -23,6 +24,8 @@ const API_OPTIONS = {
 const MAX_TMDB_PAGES = 500;
 
 const Series = () => {
+  const { error } = useToast();
+
   const [seriesList, setSeriesList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -138,6 +141,8 @@ const Series = () => {
       } catch (error) {
         console.error(error);
         if (!ignore) {
+          error("Failed to load series. Check your network and try again.");
+
           setErrorMessage("Error loading series.");
         }
       } finally {

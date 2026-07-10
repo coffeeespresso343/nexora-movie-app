@@ -9,6 +9,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import TrendingMovies from "../components/TrendingMovies";
 import { useLocation } from "react-router-dom";
 import TrendingCard from "../components/TrendingCard";
+import { useToast } from "../context/ToastContext";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -24,6 +25,8 @@ const API_OPTIONS = {
 const MAX_TMDB_PAGES = 500;
 
 const Movies = () => {
+  const { error } = useToast();
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSearchError, setIsSearchError] = useState(false);
@@ -146,6 +149,8 @@ const Movies = () => {
       } catch (error) {
         console.error(error);
         if (!ignore) {
+          error("Failed to load movies. Check your network and try again.");
+
           setErrorMessage("Error loading movies.");
         }
       } finally {

@@ -51,10 +51,12 @@ const Profile = () => {
     const result = await updateAvatar(file);
     setIsUploadingAvatar(false);
 
-    if (!result.success) {
+    if (result.success) {
+      success("Avatar updated.");
+    } else {
+      error("Avatar upload failed. Please try again.", { title: "Sorry" });
       setAvatarError(result.error);
     }
-    success("Avatar updated.");
 
     e.target.value = ""; // allow re-selecting the same file later
   };
@@ -68,7 +70,9 @@ const Profile = () => {
     if (!result.success) {
       setAvatarError(result.error);
     }
-    success("Avatar removed.");
+    {
+      success("Avatar removed.");
+    }
   };
 
   const handleDeactivate = async () => {

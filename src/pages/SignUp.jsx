@@ -7,24 +7,29 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const { signup, loginWithGoogle, isLoading } = useAuth();
-  const { success } = useToast();
+  const { success, warning, error } = useToast();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState("");
-  const [showNotice, setShowNotice] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname || "/";
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowNotice(timer);
-      return () => clearTimeout(timer);
-    }, 600);
+    setTimeout(() => {
+      warning("You don't need to input your real email.");
+    }, 700);
+
+    setTimeout(() => {
+      warning(
+        "If you feel something insecure, don't try 'Continue with Google'",
+        { title: "Wraning!", duration: 5000 },
+      );
+    }, 500);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -40,9 +45,10 @@ const SignUp = () => {
     const result = await signup({ name, email, password });
 
     if (result.success) {
+      success("Account created successfully! Welcome to Nexora.");
       navigate(redirectTo);
-      success("Account created! Welcome to Nexora.");
     } else {
+      error("Failed to create an account! Please try again.");
       setFormError(result.error);
     }
   };
@@ -59,35 +65,6 @@ const SignUp = () => {
         <p className="mt-2 text-center text-sm text-gray-400">
           Create an account to start watching.
         </p>
-
-        <div
-          className={`transition-all duration-600 ${showNotice ? "mt-4 mb-10 md:mb-2 max-h-30 opacity-100" : "max-h-0 opacity-0"}`}
-        >
-          <div className="rounded-sm border bg-amber-400/5 border-amber-400/10 p-2">
-            <div className="mt-2 flex flex-col items-center gap-2 text-center text-xs text-amber-400 p-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-                <path d="M12 8v4" />
-                <path d="M12 16h.01" />
-              </svg>
-
-              <h2 className="text-sm font-semibold text-amber-400">
-                Don't use real email.
-              </h2>
-              <p>Cuz I love your personal data protection.</p>
-            </div>
-          </div>
-        </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
