@@ -3,6 +3,11 @@
 
 @import "tailwindcss";
 
+html,
+body {
+    overflow-x: hidden;
+}
+
 @keyframes toast-shrink {
     from {
         width: 100%;
