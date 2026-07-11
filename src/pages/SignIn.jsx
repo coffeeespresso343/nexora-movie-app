@@ -7,6 +7,8 @@ const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { info } = useToast();
+
   const { login, loginWithGoogle, isLoading } = useAuth();
   const { success, error } = useToast();
 
@@ -28,8 +30,9 @@ const SignIn = () => {
     const result = await login({ email, password });
 
     if (result.success) {
-      navigate(redirectTo);
       info(`Welcome back, ${result.user?.name || "there"}!`);
+
+      navigate(redirectTo);
     } else {
       setFormError(result.error);
     }

@@ -124,7 +124,7 @@ const Toast = ({ toast, onDismiss }) => {
 
   return (
     <div
-      className={`relative flex w-80 items-start gap-3 overflow-hidden rounded-xl border backdrop-blur-md px-4 py-3.5 shadow-xl 
+      className={`relative flex w-80 max-w-[calc(100vw-2rem)] items-start gap-3 overflow-hidden rounded-xl border backdrop-blur-md px-4 py-3.5 shadow-xl 
         transition-all ease-in-out ${animationClass} ${style.container}`}
       style={{ transitionDuration: `${EXIT_DURATION}` }}
     >
@@ -178,7 +178,7 @@ const ToastContainer = ({ toasts, onDismiss }) => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed right-4 top-20 z-9999 flex flex-col gap-3">
+    <div className="fixed right-0 top-20 z-9999 flex flex-col gap-3 pr-4 max-w-full">
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}
