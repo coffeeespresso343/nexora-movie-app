@@ -19,12 +19,6 @@ const AuthCallback = () => {
     const userId = searchParams.get("userId");
     const secret = searchParams.get("secret");
 
-    // console.log(window.location.href);
-    // console.log(searchParams.toString());
-
-    // console.log("userId:", searchParams.get("userId"));
-    // console.log("secret:", searchParams.get("secret"));
-
     if (userId && secret) {
       completeOAuthSession(userId, secret).then((result) => {
         success("Successfully signed in with Google! Enjoy Nexora");

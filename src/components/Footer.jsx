@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 const NAV_LINKS = [
@@ -10,9 +10,9 @@ const NAV_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", to: "/about" },
-  { label: "Terms of Use", to: "/about" },
-  { label: "Contact", to: "/about" },
+  { label: "Privacy Policy", to: "/not-found" },
+  { label: "Terms of Use", to: "/not-found" },
+  { label: "Contact", to: "/not-found" },
   { label: "About", to: "/about" },
 ];
 
@@ -101,7 +101,6 @@ const Footer = () => {
                 <li key={label}>
                   <Link
                     to={to}
-                    onClick={() => window.scrollTo(0, 0)}
                     className="text-sm text-gray-400 transition hover:text-purple-400"
                   >
                     {label}

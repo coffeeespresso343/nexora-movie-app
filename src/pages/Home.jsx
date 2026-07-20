@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import MovieRow from "../components/MovieRow";
 import TrendingMovies from "../components/TrendingMovies";
 import ErrorMessage from "../components/ErrorMessage";
-import { useToast } from "../context/ToastContext";
+import Hero from "../components/Hero";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -28,8 +28,6 @@ const ROWS = [
 ];
 
 const Home = () => {
-  const { info, success, error } = useToast();
-
   const [showTrendingMovies, setShowTrendingMovies] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [rowData, setRowData] = useState(() =>
@@ -37,10 +35,6 @@ const Home = () => {
       ROWS.map((r) => [r.endpoint, { movies: [], isLoading: true }]),
     ),
   );
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -95,47 +89,52 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
-      <div className="mx-auto max-w-7xl px-6 pb-5">
-        <div className="-mt-14">{showTrendingMovies && <TrendingMovies />}</div>
+    <>
+      <Hero />
+      <div className="min-h-screen bg-[#0B0B0F] text-[#F5F1E8]">
+        <div className="mx-auto max-w-7xl px-6 pb-5">
+          <div className="-mt-14">
+            {showTrendingMovies && <TrendingMovies />}
+          </div>
 
-        {errorMessage ? (
-          <ErrorMessage errorMessage={errorMessage} isSearchError={false} />
-        ) : (
-          ROWS.map(({ title, endpoint, seeAllPath }) => (
-            <MovieRow
-              key={endpoint}
-              title={title}
-              movies={rowData[endpoint].movies}
-              isLoading={rowData[endpoint].isLoading}
-              seeAllPath={seeAllPath}
-            />
-          ))
-        )}
-        <div className="mt-10 flex items-center justify-center">
-          <Link
-            to="/movie"
-            className="flex items-center gap-1 font-medium text-gray-400  hover:text-purple-400 transition-colors duration-300"
-          >
-            Browse All Movies
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {errorMessage ? (
+            <ErrorMessage errorMessage={errorMessage} isSearchError={false} />
+          ) : (
+            ROWS.map(({ title, endpoint, seeAllPath }) => (
+              <MovieRow
+                key={endpoint}
+                title={title}
+                movies={rowData[endpoint].movies}
+                isLoading={rowData[endpoint].isLoading}
+                seeAllPath={seeAllPath}
+              />
+            ))
+          )}
+          <div className="mt-10 flex items-center justify-center">
+            <Link
+              to="/movie"
+              className="flex items-center gap-1 font-medium text-gray-400  hover:text-purple-400 transition-colors duration-300"
             >
-              <path d="M13 5H19V11" />
-              <path d="M19 5L5 19" />
-            </svg>
-          </Link>
+              Browse All Movies
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M13 5H19V11" />
+                <path d="M19 5L5 19" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -51,10 +51,6 @@ const Genres = () => {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
     let ignore = false;
 
     const fetchGenres = async () => {

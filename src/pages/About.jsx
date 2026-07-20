@@ -1,6 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import LoadingScreen from "../components/LoadingScreen";
 
 const TECH_STACK = [
   { label: "React", description: "UI library" },
@@ -181,7 +181,9 @@ const FEATURES = [
 ];
 
 const About = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingScreen />;
 
   return (
     <div className="min-h-screen bg-black text-white">
