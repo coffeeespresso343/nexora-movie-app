@@ -65,10 +65,6 @@ const Movies = () => {
     setPage(newPage);
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   // Fetch movies - /search/movie for queries, /discover/movie for browse.
   // If a search returns no movies results, silently retries with /search/tv
   // and flags isTVFallback so the UI can explain what happened
@@ -146,11 +142,13 @@ const Movies = () => {
         if (query && data.results.length > 0) {
           await updateSearchCount(query, data.results[0]);
         }
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
         if (!ignore) {
-          error("Failed to load movies. Check your network and try again.");
-
+          new Error("Failed to load movies. Check your network and try again.");
+          error("Check your network and try again.", {
+            title: "Fail to load movies",
+          });
           setErrorMessage("Error loading movies.");
         }
       } finally {

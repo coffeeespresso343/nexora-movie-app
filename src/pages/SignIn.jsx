@@ -10,14 +10,12 @@ const SignIn = () => {
   const { info } = useToast();
 
   const { login, loginWithGoogle, isLoading } = useAuth();
-  const { success, error } = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const googleNoticeTimerRef = useRef(null);
 
   const redirectTo = location.state?.from?.pathname || "/";
   const message = location.state?.message;
