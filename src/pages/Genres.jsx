@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import SkeletonGrid from "../components/SkeletonGrid";
 import ErrorMessage from "../components/ErrorMessage";
 import MovieCard from "../components/MovieCard";
@@ -16,22 +17,24 @@ const API_OPTIONS = {
   },
 };
 
+const skeletonWidths = [80, 110, 95, 130, 100, 120];
+
 const MAX_TMDB_PAGES = 500;
 
 const Genres = () => {
-  const [genres, setGeneres] = useState([]);
+  const [genres, setGenres] = useState([]);
   const [genresError, setGenresError] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(null);
 
   const [movieList, setMovieList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGenreLoading, setIsGenreLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const isUserPaginating = useRef(false);
-  const isFirstLoad = useRef(true);
   const moviesRef = useRef(null);
 
   const handlePageChange = (newPage) => {
@@ -54,12 +57,11 @@ const Genres = () => {
     let ignore = false;
 
     const fetchGenres = async () => {
-      setIsLoading(true);
-      setErrorMessage("");
-
-      const endPoint = `${API_BASE_URL}/genre/movie/list`;
+      setIsGenreLoading(true);
+      setGenresError("");
 
       try {
+        const endPoint = `${API_BASE_URL}/genre/movie/list`;
         const response = await fetch(endPoint, API_OPTIONS);
 
         if (!response.ok) throw new Error("Failed to load genres.");
@@ -68,13 +70,15 @@ const Genres = () => {
 
         if (ignore) return;
 
-        setGeneres(data.genres || []);
+        setGenres(data.genres || []);
       } catch (error) {
         console.error(error);
         if (!ignore) {
           setGenresError("Couldn't load genres.");
           return;
         }
+      } finally {
+        setIsGenreLoading(false);
       }
     };
 
@@ -132,11 +136,6 @@ const Genres = () => {
   }, [selectedGenre, page]);
 
   useEffect(() => {
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false;
-      return;
-    }
-
     if (!isUserPaginating.current) return;
 
     moviesRef.current?.scrollIntoView({
@@ -187,30 +186,59 @@ const Genres = () => {
           </h1>
 
           <div className="mt-16 pb-20 sm:pb-10 lg:pb-10  flex w-full items-center justify-center">
-            {genresError ? (
+            {isGenreLoading ? (
+              <div className="flex flex-wrap justify-center gap-3">
+                {Array.from({ length: 16 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-9 animate-pulse rounded-full border border-white/10 bg-white/5"
+                    style={{
+                      width: skeletonWidths[i % skeletonWidths.length],
+                    }}
+                  />
+                ))}
+              </div>
+            ) : genresError ? (
               <ErrorMessage errorMessage={genresError} />
             ) : (
-              <div className="flex flex-wrap gap-3">
-                {genres.map((genre) => {
+              <motion.div
+                initial={{ opacity: 0, x: "100%" }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: "100%" }}
+                transition={{
+                  type: "tween",
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="flex flex-wrap gap-3"
+              >
+                {genres.map((genre, i) => {
                   const isActive = selectedGenre?.id === genre.id;
                   return (
-                    <button
+                    <motion.div
                       key={genre.id}
-                      type="button"
-                      onClick={() => {
-                        handleGenreSelect(genre);
-                      }}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5 cursor-pointer  ${
-                        isActive
-                          ? "bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md shadow-purple-500/30"
-                          : "border border-white/15 text-gray-300 hover:border-purple-500/40 hover:text-white"
-                      }`}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ delay: 0.06 * i, duration: 0.4 }}
                     >
-                      {genre.name}
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleGenreSelect(genre);
+                        }}
+                        className={`rounded-full px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5 cursor-pointer  ${
+                          isActive
+                            ? "bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md shadow-purple-500/30"
+                            : "border border-white/15 text-gray-300 hover:border-purple-500/40 hover:text-white"
+                        }`}
+                      >
+                        {genre.name}
+                      </button>
+                    </motion.div>
                   );
                 })}
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
@@ -220,7 +248,7 @@ const Genres = () => {
         <section ref={moviesRef} className="mt-10 scroll-mt-24">
           {selectedGenre ? (
             <>
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl text-center font-bold text-white">
                 <span className="font-[Bebas_Neue] tracking-wider bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
                   {selectedGenre.name}{" "}
                 </span>

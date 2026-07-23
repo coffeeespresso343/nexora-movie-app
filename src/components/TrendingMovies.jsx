@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { getTrendingMovies } from "../appwrite";
 import { Link } from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
+import { ChevronRight } from "lucide-react";
 
-const TrendingMovies = ({}) => {
+const TrendingMovies = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [isTrendingLoading, setIsTrendingLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,12 +25,12 @@ const TrendingMovies = ({}) => {
   useEffect(() => {
     let ignore = false;
 
-    setIsTrendingLoading(true);
-    setDisabled(false);
-    setErrorMessage("");
-
     const loadTrendingMovies = async () => {
       try {
+        setIsTrendingLoading(true);
+        setDisabled(false);
+        setErrorMessage("");
+
         const movies = await getTrendingMovies();
 
         if (!movies || movies.length === 0) {
@@ -114,19 +115,7 @@ const TrendingMovies = ({}) => {
           disabled={disabled}
           className="absolute right-0.5 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/50 text-black rounded-full p-2 shadow disabled:opacity-0"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m9 18 6-6-6-6" />
-          </svg>
+          <ChevronRight size={18} />
         </button>
       </div>
     </section>
