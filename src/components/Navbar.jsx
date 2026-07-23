@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import ProfileMenu from "./ProfileMenu";
 import { getAvatarUrl } from "../appwrite";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader, LogOut, Menu, X } from "lucide-react";
+import { Loader2, LogIn, LogOut, Menu, X } from "lucide-react";
 import { useToast } from "../context/ToastContext";
 
 const NAV_LINKS = [
@@ -27,6 +27,8 @@ const Navbar = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   const buttonRef = useRef();
 
   const avatar = getAvatarUrl(user?.prefs?.avatarFileId, 160);
@@ -45,6 +47,10 @@ const Navbar = () => {
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   const handleLogoClick = () => {
@@ -211,7 +217,10 @@ const Navbar = () => {
               type="button"
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
-              onClick={() => setIsMenuOpen((open) => !open)}
+              onClick={() => {
+                setIsMenuOpen((open) => !open);
+                setShowLogoutConfirm(false);
+              }}
               className="text-white md:hidden cursor-pointer hover:text-purple-400"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -240,7 +249,7 @@ const Navbar = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 top-16 z-40 bg-black/60 backdrop-blur-md lg:hidden"
+              className="fixed inset-0 top-16 z-40 bg-purple-500/5 backdrop-blur-md lg:hidden"
             />
 
             <motion.div
@@ -252,7 +261,7 @@ const Navbar = () => {
                 duration: 0.4,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="fixed top-16 right-0 z-50 h-[calc(100vh-4rem)] w-[72%] max-w-sm rounded-bl-3xl flex-col border-l border-b border-white/10 text-sm font-medium bg-black/95 p-4 shadow-2xl backdrop-blur-xl"
+              className="fixed top-16 right-0 z-50 h-[calc(100vh-4rem)] w-[72%] max-w-sm rounded-bl-3xl flex-col border-l border-b border-white/10 text-sm font-medium bg-purple-500/10 p-4 shadow-2xl backdrop-blur-xl"
             >
               {NAV_LINKS.map(({ to, label }, i) => {
                 return (
@@ -268,7 +277,7 @@ const Navbar = () => {
                       end={to === "/"}
                       onClick={() => setIsMenuOpen(false)}
                       className={({ isActive }) =>
-                        `block rounded-xl px-5 py-3 font-medium transition-all duration-300 ${
+                        `block rounded-xl mb-1 px-5 py-3 font-medium  ${
                           isActive
                             ? "bg-purple-500/15 text-purple-400"
                             : "text-gray-300  hover:text-purple-400"
@@ -280,26 +289,83 @@ const Navbar = () => {
                   </motion.div>
                 );
               })}
+              <hr className="text-pink-500/20 mt-8" />
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.4 }}
-                className="mt-8"
+                className="mt-4"
               >
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  whileTap={{ scale: 0.96 }}
-                  onClick={handleLogout}
-                  className="flex w-full items-center justify-center gap-2 rounded-full border px-4 py-2 font-medium  backdrop-blur-md transition-all duration-300 shadow-lg border-red-500/30 bg-red-500/5 text-red-500"
-                >
-                  {isLoggingOut ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : (
-                    <LogOut size={16} />
-                  )}
-                  {isLoggingOut ? "Logging out..." : "Logout"}
-                </motion.button>
+                {isAuthenticated ? (
+                  <AnimatePresence mode="wait">
+                    {!showLogoutConfirm ? (
+                      <motion.button
+                        layout
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                        onClick={() => setShowLogoutConfirm(true)}
+                        className="flex gap-1.5 items-center justify-center w-full bg-red-500/10 text-red-500 px-4 py-2 rounded-full border shadow-lg shadow-red-500/10 border-red-500/30"
+                      >
+                        <LogOut size={16} /> Logout
+                      </motion.button>
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                        initial={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.98, y: -20 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                        className="space-y-3 flex flex-col items-center justify-center overflow-hidden border bg-red-500/5 border-red-500/20 rounded-lg p-4"
+                      >
+                        <motion.p
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 }}
+                          className="text-sm text-red-500"
+                        >
+                          Are you sure to logout?
+                        </motion.p>
+
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.15 }}
+                          className="mt-2 flex items-center gap-3"
+                        >
+                          <button
+                            type="button"
+                            onClick={handleLogout}
+                            className="rounded-full flex items-center gap-1.5 bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60 cursor-pointer"
+                          >
+                            {isLoggingOut ? (
+                              <>
+                                <Loader2 size={16} className="animate-spin" />
+                                Logging out...
+                              </>
+                            ) : (
+                              "Yes, Logout"
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCancelLogout}
+                            className="rounded-full border border-white/15 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10 cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                ) : (
+                  <Link
+                    to="/signin"
+                    className="flex gap-1.5 items-center justify-center w-full bg-linear-to-r from-purple-500 to-pink-400 text-white px-4 py-2 rounded-full border shadow-lg shadow-purple-500/10 border-purple-500/30"
+                  >
+                    <LogIn size={16} /> Sigin In
+                  </Link>
+                )}
               </motion.div>
             </motion.div>
           </>
