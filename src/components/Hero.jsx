@@ -1,3 +1,4 @@
+import { PlayIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const FEATURES = [
@@ -66,6 +67,7 @@ const Hero = () => {
         src="hero.png"
         alt="Hero background"
         aria-hidden="true"
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
 
@@ -99,16 +101,7 @@ const Hero = () => {
                 to="/movie"
                 className="flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition duration-300 ease-in-out hover:-translate-y-1 hover:brightness-110 active:scale-95"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  stroke="none"
-                >
-                  <polygon points="6 3 20 12 6 21 6 3" />
-                </svg>
+                <PlayIcon size={17} />
                 Start Watching
               </Link>
               <Link

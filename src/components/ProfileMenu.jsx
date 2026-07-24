@@ -43,9 +43,9 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
     <AnimatePresence mode="wait">
       <motion.div
         ref={menuRef}
-        initial={{ opacity: 0, x: "100%" }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: "100%" }}
+        initial={{ opacity: 0, y: -24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -24 }}
         transition={{
           type: "tween",
           duration: 0.4,
@@ -53,13 +53,7 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
         }}
         className="absolute -right-14 md:right-0  mt-3 w-64 rounded-lg border border-white/10 bg-black/90 py-1 shadow-lg backdrop-blur-md"
       >
-        <motion.div
-          initial={{ opacity: 0, x: "100%", scale: 0.98 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: -50, scale: 0.98 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="flex items-center gap-3 border-b border-white/10 px-4 py-3"
-        >
+        <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
           {avatarUrl ? (
             <img
               src={avatarUrl}
@@ -77,15 +71,9 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
             <h3 className="truncate font-medium text-white">{user?.name}</h3>
             <p className="truncate text-sm">{user?.email}</p>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: "100%", scale: 0.98 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: -50, scale: 0.98 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="border-b border-white/10 py-2"
-        >
+        <div className="border-b border-white/10 py-2">
           <Link
             to="/profile"
             onClick={onClose}
@@ -102,7 +90,7 @@ const ProfileMenu = ({ onClose, triggerRef }) => {
             <Settings size={20} />
             Settings
           </Link>
-        </motion.div>
+        </div>
 
         {!showLogoutConfirm ? (
           <motion.button
