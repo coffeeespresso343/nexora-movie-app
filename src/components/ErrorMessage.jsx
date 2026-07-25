@@ -1,5 +1,3 @@
-import React from "react";
-
 const ErrorMessage = ({ errorMessage, isSearchError = false }) => {
   if (!errorMessage) return null;
 
