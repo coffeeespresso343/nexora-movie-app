@@ -241,8 +241,8 @@ const About = () => {
             A full-stack movies and series discovery app - built to learn, built
             to ship, built to look like something real.
           </p>
-          <p className="mt-6 text-md text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Built with heart and too much coffee by{" "}
+          <p className="mt-6 text-md text-gray-300 max-w-xl mx-auto leading-relaxed">
+            Built with heart and too much coffee by <br />
             <span className="font-semibold bg-linear-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent">
               Linn Khant
             </span>
@@ -356,7 +356,7 @@ const About = () => {
               whileHover={{ scale: 1.02, y: -4 }}
               whileTap={{ scale: 0.98 }}
               transition={{
-                duration: i * 0.07,
+                duration: 0.7 * i,
                 type: "spring",
                 stiffness: 200,
                 damping: 10,
@@ -390,14 +390,14 @@ const About = () => {
       {/* Developer Bio */}
 
       <section className="mx-auto max-w-4xl px-6 pb-20">
-        <div className="rounded-2xl border shadow-lg shadow-purple-500/20 border-white/10 bg-white/5 p-8 md:p-10">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ delay: 0.6, duration: 0.35 }}
-            className="flex flex-col sm:flex-row gap-6 items-center"
-          >
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ delay: 0.6, duration: 0.35 }}
+          className="rounded-2xl border shadow-lg shadow-purple-500/20 border-white/10 bg-white/5 p-8 md:p-10"
+        >
+          <div className="flex flex-col sm:flex-row gap-6 items-center">
             <div className="shrink-0 rounded-full h-30 w-30">
               <img
                 src="linn.jpg"
@@ -477,8 +477,8 @@ const About = () => {
                 </a>
               </motion.div>
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </section>
 
       <section className="mx-auto max-w-4xl px-6 pb-24 text-center">

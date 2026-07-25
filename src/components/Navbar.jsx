@@ -108,7 +108,7 @@ const Navbar = () => {
             onClick={handleLogoClick}
             className="flex items-center gap-2"
           >
-            <span className="bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-2xl font-bold text-transparent">
+            <span className="bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-2xl font-bold text-transparent ">
               N
             </span>
             <h3 className="text-xl font-semibold tracking-wide text-white">
