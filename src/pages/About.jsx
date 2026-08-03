@@ -2,7 +2,35 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import LoadingScreen from "../components/LoadingScreen";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Compass } from "lucide-react";
+import { siFacebook, siGithub, siInstagram, siTelegram } from "simple-icons";
+
+const SOCIAL_LINKS = [
+  {
+    label: "Facebook",
+    value: "@linnkhant404",
+    href: "https://www.facebook.com/linnkhant404",
+    icon: siFacebook,
+  },
+  {
+    label: "Instagram",
+    value: "@lynnmrattswe",
+    href: "https://www.instagram.com/lynnmrattswe",
+    icon: siInstagram,
+  },
+  {
+    label: "Telegram",
+    value: "@linnkhant343",
+    href: "https://t.me/linnkhant343",
+    icon: siTelegram,
+  },
+  {
+    label: "GitHub",
+    value: "@coffeeespresso343",
+    href: "https://github.com/coffeeespresso343",
+    icon: siGithub,
+  },
+];
 
 const TECH_STACK = [
   { label: "React", description: "UI library" },
@@ -241,12 +269,45 @@ const About = () => {
             A full-stack movies and series discovery app - built to learn, built
             to ship, built to look like something real.
           </p>
-          <p className="mt-6 text-md text-gray-300 max-w-xl mx-auto leading-relaxed">
-            Built with heart and too much coffee by <br />
-            <span className="font-semibold bg-linear-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent">
-              Linn Khant
-            </span>
-          </p>
+
+          <div className="mt-8 border border-white/10 bg-white/5 rounded-xl flex flex-col items-center gap-3 p-3">
+            <h2 className="text-sm leading-relaxed text-gray-400">
+              Built with Heart and too much Coffee by{" "}
+              <span className="bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Linn Khant
+              </span>
+            </h2>
+
+            <div className="flex items-center justify-center gap-4">
+              <a
+                href="https://linnkhant.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="bg-white/10 h-8 w-8 flex items-center justify-center rounded-xl">
+                  <Compass className="text-white/80 h-6 w-6 hover:text-white" />
+                </span>
+              </a>
+              {SOCIAL_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="bg-white/10 h-8 w-8 flex items-center justify-center rounded-xl">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-5 w-5 text-white/80 transition-colors duration-200 hover:text-white"
+                    >
+                      <path d={link.icon.path} />
+                    </svg>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}
@@ -394,7 +455,7 @@ const About = () => {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ delay: 0.6, duration: 0.35 }}
+          transition={{ delay: 0.1, duration: 0.35 }}
           className="rounded-2xl border shadow-lg shadow-purple-500/20 border-white/10 bg-white/5 p-8 md:p-10"
         >
           <div className="flex flex-col sm:flex-row gap-6 items-center">
@@ -434,47 +495,33 @@ const About = () => {
                   stiffness: 200,
                   damping: 10,
                 }}
-                className="mt-6 flex gap-3"
+                className="mt-6 flex items-center justify-center gap-4"
               >
                 <a
-                  href="https://github.com/coffeeespresso343"
+                  href="https://linnkhant.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-gray-300 transition hover:border-purple-500/40 hover:text-white hover:-translate-y-1"
+                  className="flex items-center gap-2 rounded-xl border border-white/15 px-2 py-2 text-sm text-gray-300 transition hover:border-purple-500/40 hover:text-white hover:-translate-y-1"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
-                  GitHub
+                  <Compass className="text-white/80 h-6 w-6 hover:text-white" />
                 </a>
-                <a
-                  href="https://t.me/linnkhant343"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-gray-300 transition hover:border-purple-500/40 hover:text-white hover:-translate-y-1"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                {SOCIAL_LINKS.map((link) => (
+                  <a
+                    key={link.value}
+                    href="https://github.com/coffeeespresso343"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-xl border border-white/15 px-2 py-2 text-sm text-gray-300 transition hover:border-purple-500/40 hover:text-white hover:-translate-y-1"
                   >
-                    <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
-                    <path d="m21.854 2.147-10.94 10.939" />
-                  </svg>
-                  Telegram
-                </a>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-6 w-6"
+                    >
+                      <path d={link.icon.path} />
+                    </svg>
+                  </a>
+                ))}
               </motion.div>
             </div>
           </div>

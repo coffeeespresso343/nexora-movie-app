@@ -128,14 +128,26 @@ export function AuthProvider({ children }) {
     dispatch({ type: "LOADING" });
 
     try {
-      await account.createSession({ userId, secret });
-      const currentUser = await account.get();
+      let currentUser;
+
+      try {
+        // Already sigin in?
+        currentUser = await account.get();
+      } catch {
+        // No active session, create one
+        await account.createSession({ userId, secret });
+        currentUser = await account.get();
+      }
+
       dispatch({ type: "SUCCESS", payload: currentUser });
       return { success: true };
-    } catch (error) {
-      const message = error?.message || "Google sign-in failed.";
+    } catch (err) {
+      const message = err?.message || "Google sign-in failed.";
       dispatch({ type: "ERROR", payload: message });
-      return { success: false, error: message };
+      return {
+        success: false,
+        error: message,
+      };
     }
   }, []);
 
@@ -266,7 +278,9 @@ export function AuthProvider({ children }) {
         await account.deleteSession({
           sessionId: "current",
         });
-      } catch {}
+      } catch {
+        console.log("Error Deleting Account.");
+      }
 
       dispatch({ type: "LOGOUT" });
       return { success: true };
