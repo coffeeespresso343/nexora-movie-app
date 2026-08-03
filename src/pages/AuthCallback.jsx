@@ -16,18 +16,34 @@ const AuthCallback = () => {
 
     hasRun.current = true;
 
-    const userId = searchParams.get("userId");
-    const secret = searchParams.get("secret");
+    const handleCallback = async () => {
+      const userId = searchParams.get("userId");
+      const secret = searchParams.get("secret");
 
-    if (userId && secret) {
-      completeOAuthSession(userId, secret).then((result) => {
-        success("Successfully signed in with Google! Enjoy Nexora");
-        navigate(result.success ? "/" : "/oauth-fail");
-      });
-    } else {
-      error("Google sigin-in failed. Please try again.");
-      navigate("/oauth-fail");
-    }
+      if (!userId || !secret) {
+        error("Google sign-in failed. Pleasy try again.");
+        navigate("/oauth-fail", { replace: true });
+        return;
+      }
+
+      try {
+        const result = await completeOAuthSession(userId, secret);
+
+        if (result.success) {
+          success("Successfully sigined in with Google! Enjoy Nexora.");
+          navigate("/", { replace: true });
+          return;
+        } else {
+          error(result.message || "Google sign-in failed.");
+          navigate("/oauth-fail", { replace: true });
+        }
+      } catch (err) {
+        console.error(err);
+        error("Google sign-in failed. Please try again.");
+        navigate("/oauth-fail", { replace: true });
+      }
+    };
+    handleCallback();
   }, [searchParams, completeOAuthSession, navigate]);
 
   return (
