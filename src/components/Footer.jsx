@@ -66,7 +66,7 @@ const Footer = () => {
               Your ultimate streaming destination for movies and series.
               Discover what to watch next.
             </p>
-            <div className="border border-white/10 bg-white/10 rounded-xl flex flex-col items-center gap-3 p-3">
+            <div className="border border-white/10 bg-white/5 rounded-xl flex flex-col items-center gap-3 p-3">
               <h2 className="text-sm leading-relaxed text-gray-400">
                 Developed by Linn Khant
               </h2>
